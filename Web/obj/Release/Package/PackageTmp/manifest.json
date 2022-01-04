@@ -1,0 +1,19 @@
+﻿{
+  "name": "Seminários IECB",
+  "short_name": "Seminários IECB",
+  "description": "Seminários IECB",  
+  "icons": [
+    {
+      "src": "/Images/Icons/192x192.png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/Images/Icons/512x512.png",
+      "sizes": "512x512"
+    }
+  ],
+  "display": "standalone",
+  "start_url": "/",
+  "theme_color": "#c20935",
+  "background_color": "#c20935"
+}

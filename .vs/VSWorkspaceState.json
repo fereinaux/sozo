@@ -1,0 +1,17 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\Web",
+    "\\Web\\obj",
+    "\\Web\\obj\\Release",
+    "\\Web\\obj\\Release\\Package",
+    "\\Web\\obj\\Release\\Package\\PackageTmp",
+    "\\Web\\obj\\Release\\Package\\PackageTmp\\Scripts",
+    "\\Web\\obj\\Release\\Package\\PackageTmp\\Scripts\\app",
+    "\\Web\\obj\\Release\\Package\\PackageTmp\\Scripts\\app\\Participante",
+    "\\Web\\Views",
+    "\\Web\\Views\\Inscricoes"
+  ],
+  "SelectedNode": "\\Web\\obj\\Release\\Package\\PackageTmp\\Scripts\\app\\Participante\\checkin.js",
+  "PreviewInSolutionExplorer": false
+}

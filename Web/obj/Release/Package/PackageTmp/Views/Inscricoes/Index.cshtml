@@ -1,0 +1,120 @@
+﻿@{
+    Layout = null;
+    ViewBag.Numero = new Random().Next();
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seminários IECB | Inscrições</title>
+    <link href="~/Content/bootstrap4.css" rel="stylesheet">
+    <link href="~/Fonts/font-awesome/css/font-awesome.css" rel="stylesheet">
+    <link rel="icon" type="image/png" href="~/Images/logo-iecb.png" />
+    <link href="~/Content/animate.css" rel="stylesheet">
+    <link href="~/Content/style.css" rel="stylesheet">
+    <link href="~/Content/evento.css" rel="stylesheet">
+    <link href="~/Content/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+    <link href="~/Content/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="~/Content/plugins/datapicker/datepicker3.css" rel="stylesheet">
+</head>
+<body class="background-evento">
+    <div class="middle-box inscricoes animated fadeInDown ">
+        <div class="row justify-content-center">
+            <div class="col col-6">
+                <img class="full-width" src="~/Images/logo-@ViewBag.Logo" alt="Seminários IECB" />
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col col-12">
+                <div class="p-h-xs m-b-lg" id="form-inscricao">
+                    <div class="form-group">
+                        <label for="participante-email" class="text-white">Email</label>
+                        <input type="email" class="form-control" id="participante-email" data-field="Email" />
+                    </div>
+                    <div class="pnl-cadastro">
+
+                        <div class="form-group">
+                            <label for="participante-nome" class="text-white">Nome Completo</label>
+                            <input type="text" class="form-control required" id="participante-nome" data-field="Nome" />
+                        </div>
+                        <div class="form-group">
+                            <label for="participante-apelido" class="text-white">Como você gostaria de ser chamado no Seminário?</label>
+                            <input type="text" class="form-control required" id="participante-apelido" data-field="Apelido" />
+                        </div>
+                        <div class="form-group">
+                            <label for="participante-sexo" class="text-white block">Sexo</label>
+                            <div class="radio i-checks-brown inline"><label class="text-white"> <input type="radio" id="sexo-masculino" checked="" value="1" name="participante-sexo"> <i></i> Masculino </label></div>
+                            <div class="radio i-checks-brown inline p-l-xs"><label class="text-white"> <input type="radio" id="sexo-feminino" value="2" name="participante-sexo"> <i></i> Feminino </label></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="participante-data-nascimento" class="text-white">Data de Nascimento</label>
+                            <input type="text" class="form-control full-date required" id="participante-data-nascimento" data-field="Data de Nascimento" />
+                        </div>                        
+                        <div class="form-group">
+                            <label for="participante-fone" class="text-white">Fone </label>
+                            <input type="text" class="form-control fone" id="participante-fone" data-field="Fone do Participante" />
+                        </div>
+                        <div class="form-group">
+                            <label for="participante-nome-convite" class="text-white">Pessoa de contato</label>
+                            <input type="text" class="form-control required" id="participante-nome-convite" data-field="Pessoa de contato" />
+                        </div>
+                        <div class="form-group">
+                            <label for="participante-fone-convite" class="text-white">Fone do contato</label>
+                            <input type="text" class="form-control fone" id="participante-fone-convite" data-field="Fone do contato" />
+                        </div>
+                        <div class="form-group">
+                            <label for="participante-congregacao" class="text-white block">Participa de qual Congregação?</label>
+                            <div class="radio i-checks-brown inline"><label class="text-white"> <input type="radio" id="trindade" checked="" value="Trindade" name="participante-congregacao"> <i></i> Trindade </label></div>
+                            <div class="radio i-checks-brown inline p-l-xs"><label class="text-white"> <input type="radio" id="recon" value="Recon" name="participante-congregacao"> <i></i> Reconciliação </label></div>
+                            <div class="radio i-checks-brown inline p-l-xs"><label class="text-white"> <input type="radio" id="outra" value="Outra" name="participante-congregacao"> <i></i> Outra </label></div>
+                        </div>
+                        <div class="form-group congregacao d-none">
+                            <label for="participante-congregacaodescricao" class="text-white">Qual?</label>
+                            <input type="text" class="form-control" id="participante-congregacaodescricao" data-field="Congregação" />
+                        </div>
+                        <div class="form-group">
+                            <label for="participante-hasparente" class="text-white block">Tem algum Parente fazendo o Seminário?</label>
+                            <div class="radio i-checks-brown inline"><label class="text-white"> <input type="radio" id="has-parente" value="true" name="participante-hasparente"> <i></i> Sim </label></div>
+                            <div class="radio i-checks-brown inline p-l-xs"><label class="text-white"> <input type="radio" id="not-parente" checked="" value="false" name="participante-hasparente"> <i></i> Não </label></div>
+                        </div>
+                        <div class="form-group parente d-none">
+                            <label for="participante-parente" class="text-white">Nome do Parente</label>
+                            <input type="text" class="form-control" id="participante-parente" data-field="Nome do Parente" />
+                        </div>                       
+                        <div class="form-group">
+                            <label for="participante-hasalergia" class="text-white block">Tem alguma alergia?</label>
+                            <div class="radio i-checks-brown inline"><label class="text-white"> <input type="radio" id="has-alergia" value="true" name="participante-hasalergia"> <i></i> Sim </label></div>
+                            <div class="radio i-checks-brown inline p-l-xs"><label class="text-white"> <input type="radio" id="not-alergia" checked="" value="false" name="participante-hasalergia"> <i></i> Não </label></div>
+                        </div>
+                        <div class="form-group alergia d-none">
+                            <label for="participante-alergia" class="text-white">Qual?</label>
+                            <input type="text" class="form-control" id="participante-alergia" data-field="Alergia" />
+                        </div>                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="pnl-cadastro">
+        <button type="button" class="btn btn-rounded btn-primary float" onclick="PostInscricao()"><i class="fa fa-2x fa-send m-r-sm"></i></button>
+    </div>
+    <div class="pnl-verifica">
+        <button type="button" class="btn btn-rounded btn-primary float" onclick="VerificaCadastro()"><i class="fa fa-2x fa-search m-r-sm"></i></button>
+    </div>
+</body>
+</html>
+
+<script src="~/Scripts/jquery-3.1.1.min.js"></script>
+<script src="~/Scripts/plugins/imaskjs/imask.js"></script>
+<script src="~/Scripts/app/Util/forms.js"></script>
+<script src="~/Scripts/app/Util/inputs.js"></script>
+<script src="~/Scripts/app/Util/messages.js"></script>
+<script src="~/Scripts/plugins/sweetalert/sweetalert.min.js"></script>
+<script src="~/Scripts/plugins/iCheck/icheck.min.js"></script>
+<script src="~/Scripts/plugins/moment/moment-with-locales.min.js"></script>
+<script src="~/Scripts/plugins/datapicker/bootstrap-datepicker.js"></script>
+<script src="~/Scripts/plugins/chosen/chosen.jquery.js"></script>
+
+<script src="~/Scripts/app/Inscricoes/inscricoes.js?@ViewBag.Numero"></script>
+

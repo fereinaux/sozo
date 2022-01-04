@@ -1,0 +1,68 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seminários IECB | Inscrições Encerradas</title>
+    <link href="~/Content/bootstrap4.css" rel="stylesheet">
+    <link href="~/Fonts/font-awesome/css/font-awesome.css" rel="stylesheet">
+    <link href="~/Content/animate.css" rel="stylesheet">
+    <link rel="icon" type="image/png" href="~/Images/logo-iecb.png" />
+    <link href="~/Content/style.css" rel="stylesheet">
+    <link href="~/Content/evento.css" rel="stylesheet">
+</head>
+<body class="background-evento">
+    <div class="middle-box inscricoes animated fadeInDown " style="height: 55%;">
+        <div class="row justify-content-center">
+            <div class="col col-6">
+                <img class="full-width" src="~/Images/logos.png" alt="Seminários IECB" />
+            </div>
+        </div>
+        <div class="row justify-content-center m-l-lg m-r-lg m-t-lg m-b-sm text-white text-center">
+            <h3>No momento não temos inscrições abertas para nenhum evento.</h3>
+            <h3>Mas deixa o teu Whatsapp que eu te aviso assim que abrirem novas inscrições.</h3>
+
+        </div>
+        <div class="row justify-content-center text-white text-center m-l-lg m-r-lg">
+            <div class="col col-12">
+                <div class="p-h-xs m-b-lg" id="form-newsletter">
+                    <div class="form-group">
+                        <h3 for="participante-nome" class="text-white">Whatsapp</h3>
+                        <input type="text" class="form-control fone required" id="newsletter-fone" data-field="Whatsapp" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<button type="button" class="btn btn-rounded btn-primary float" style="bottom: 19%;" onclick="Newsletter()"><i class="fa fa-2x fa-send m-r-sm"></i></button>
+</html>
+
+<script src="~/Scripts/jquery-3.1.1.min.js"></script>
+<script src="~/Scripts/app/Util/forms.js"></script>
+<script src="~/Scripts/app/Util/messages.js"></script>
+<script src="~/Scripts/plugins/sweetalert/sweetalert.min.js"></script>
+
+<script>
+    function Newsletter() {
+        if (ValidateForm(`#form-newsletter`)) {
+            $.ajax({
+                url: "/Inscricoes/Newsletter/",
+                datatype: "json",
+                type: "POST",
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(
+                    {
+                        Whatsapp: $(`#newsletter-fone`).val()
+                    }),
+                success: function () {
+                    SuccessMessage("Obrigado por se inscrever para receber nossas novidades!");
+                    $(`#newsletter-fone`).val("");
+                }
+            });
+        }
+    }
+</script>
