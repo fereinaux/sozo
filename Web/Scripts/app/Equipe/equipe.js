@@ -38,6 +38,37 @@ function CarregarTabelaEquipe() {
     $("#table-equipe").DataTable(tableEquipeConfig);
 }
 
+function header(doc, evento, page) {
+
+    var logo = "";
+    if (evento.includes("SVES"))
+        logo = "sves";
+    else if (evento.includes("SOZO"))
+        logo = "sozo";
+    else
+        logo = "scc";
+    var img = new Image();
+    img.src = `/Images/logo-${logo}.png`;
+    doc.setFontType("normal");
+    doc.setFontSize(12);
+    doc.addImage(img, 'PNG', 17, 10, 21, 21);
+    doc.text(41, 14, evento);
+    doc.text(41, 22, Titulo);
+    doc.text(41, 30, `Data de Impressão: ${moment().format('DD/MM/YYYY HH:mm')} - Página ${page}`);
+
+    var widthP = 285
+    doc.line(10, 38, widthP, 38);
+
+    doc.setFont('helvetica', "bold")
+    doc.text(17, 43, "Nome Completo");
+    doc.text(127, 43, "Crachá");
+    doc.text(172, 43, "Idade/Data de Nascimento");
+    doc.text(240, 43, "Whatsapp");
+
+    doc.line(10, 45, widthP, 45);
+    doc.setFont('helvetica', "normal")
+}
+
 function PrintEquipe() {
     $.ajax({
         url: '/Equipe/GetMembrosEquipe',
@@ -46,50 +77,31 @@ function PrintEquipe() {
         type: "POST",
         success: (result) => {
             var doc = new jsPDF('l', 'mm', "a4");
-
+            var widthP = 285
             var evento = $("#equipe-eventoid option:selected").text();
 
-            var logo = "";
-            if (evento.includes("SVES"))
-                logo = "sves";
-            else if (evento.includes("SOZO"))
-                logo = "sozo";
-            else
-                logo = "scc";
 
-            var img = new Image();
-            img.src = `/Images/logo-${logo}.png`;
+            header(doc, evento, 1)
 
-            doc.setFontType("normal");
-            doc.setFontSize(12);
-            doc.addImage(img, 'PNG', 17, 10, 21, 21);
-            doc.text(41, 14, evento);
-            doc.text(41, 22, Titulo);
-            doc.text(41, 30, `Data de Impressão: ${moment().format('DD/MM/YYYY HH:mm')}`);
 
-            var widthP = 285
-            doc.line(10, 38, widthP, 38);
-
-            doc.setFont('helvetica', "bold")
-            doc.text(17, 43, "Nome Completo");
-            doc.text(127, 43, "Crachá");
-            doc.text(172, 43, "Idade/Data de Nascimento");
-            doc.text(240, 43, "Whatsapp");
-
-            doc.line(10, 45, widthP, 45);
-            doc.setFont('helvetica', "normal")
             height = 50;
 
             $(result.data).each((index, participante) => {
+                if (index == 19) {
+                    doc.addPage()
+                    header(doc, evento, 2)
+                    height = 50;
+                }
 
                 doc.setFontType(participante.Tipo == 'Coordenador' ? "bold" : "normal");
-                doc.text(17, height, participante.Tipo == 'Coordenador' ? `Coord: ${participante.Nome}`: participante.Nome);
+                doc.text(17, height, participante.Tipo == 'Coordenador' ? `Coord: ${participante.Nome}` : participante.Nome);
                 doc.text(127, height, participante.Apelido);
                 doc.text(195, height, `${participante.Idade}`);
                 doc.text(240, height, `${participante.Fone}`);
                 height += 2;
                 doc.line(10, height, widthP, height);
                 height += 6;
+
             });
 
             for (var i = height; i < 192; i += 8) {

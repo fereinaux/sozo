@@ -1,5 +1,6 @@
 ﻿using Arquitetura.ViewModels;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Core.Business.Arquivos;
 using Core.Business.ContaBancaria;
 using Core.Business.Equipantes;
@@ -32,10 +33,10 @@ namespace SysIgreja.Controllers
 
         public IMapper mapper;
 
-        public MapperRealidade(int? qtdReunioes = null)
+        public MapperRealidade(int? qtdReunioes = null, int? eventoId = null)
         {
             var configuration = new MapperConfiguration(cfg =>
-            {
+            {                
                 cfg.CreateMap<Equipante, PostEquipanteModel>();
                 cfg.CreateMap<ApplicationUser, UsuarioViewModel>();
                 cfg.CreateMap<Quarto, PostQuartoModel>();
@@ -46,22 +47,26 @@ namespace SysIgreja.Controllers
                     .ForMember(dest => dest.Idade, opt => opt.MapFrom(x => UtilServices.GetAge(x.DataNascimento)))
                     .ForMember(dest => dest.QtdAnexos, opt => opt.MapFrom(x => x.Arquivos.Count()))
                     .ForMember(dest => dest.Sexo, opt => opt.MapFrom(x => x.Sexo.GetDescription()))
+                    .ForMember(dest => dest.Padrinho, opt => opt.MapFrom(x => x.PadrinhoId.HasValue ? x.Padrinho.Nome : null))
                     .ForMember(dest => dest.HasContact, opt => opt.MapFrom(x => x.MsgGeral || x.MsgVacina || x.MsgPagamento || !string.IsNullOrEmpty(x.Observacao)))
                     .ForMember(dest => dest.Status, opt => opt.MapFrom(x => x.Status.GetDescription()));
                 cfg.CreateMap<Equipante, EquipanteListModel>()
                     .ForMember(dest => dest.Idade, opt => opt.MapFrom(x => UtilServices.GetAge(x.DataNascimento)))
-                    .ForMember(dest => dest.Sexo, opt => opt.MapFrom(x => x.Sexo.GetDescription()))
-                    .ForMember(dest => dest.Sexo, opt => opt.MapFrom(x => x.Sexo.GetDescription()))
-                    .ForMember(dest => dest.QtdAnexos, opt => opt.MapFrom(x => x.Arquivos.Count()))
-                    .ForMember(dest => dest.Faltas, opt => opt.MapFrom(x => qtdReunioes - x.Equipes.LastOrDefault().Presencas.Count()))
-                    .ForMember(dest => dest.Equipe, opt => opt.MapFrom(x => x.Equipes.Any() ? x.Equipes.LastOrDefault().Equipe.GetDescription() : null));
+                            .ForMember(dest => dest.Sexo, opt => opt.MapFrom(x => x.Sexo.GetDescription()))
+                            .ForMember(dest => dest.Sexo, opt => opt.MapFrom(x => x.Sexo.GetDescription()))
+                            .ForMember(dest => dest.QtdAnexos, opt => opt.MapFrom(x => x.Arquivos.Count()))
+                            .ForMember(dest => dest.HasOferta, opt => opt.MapFrom(x => x.Lancamentos.Any(y => y.EventoId == (eventoId ?? x.Equipes.LastOrDefault().EventoId))))
+                            .ForMember(dest => dest.Faltas, opt => opt.MapFrom(x => qtdReunioes - x.Equipes.LastOrDefault().Presencas.Count()))
+                            .ForMember(dest => dest.Status, opt => opt.MapFrom(x => x.Status.GetDescription()))
+                            .ForMember(dest => dest.Equipe, opt => opt.MapFrom(x => x.Equipes.Any() ? x.Equipes.LastOrDefault().Equipe.GetDescription() : null));               
                 cfg.CreateMap<Equipante, EquipanteExcelModel>()
-                 .ForMember(dest => dest.Nome, opt => opt.MapFrom(x => UtilServices.CapitalizarNome(x.Nome)))
+                  .ForMember(dest => dest.Nome, opt => opt.MapFrom(x => UtilServices.CapitalizarNome(x.Nome)))
                  .ForMember(dest => dest.Apelido, opt => opt.MapFrom(x => UtilServices.CapitalizarNome(x.Apelido)))
                    .ForMember(dest => dest.Idade, opt => opt.MapFrom(x => UtilServices.GetAge(x.DataNascimento)))
                    .ForMember(dest => dest.Sexo, opt => opt.MapFrom(x => x.Sexo.GetDescription()))
+                   .ForMember(dest => dest.Status, opt => opt.MapFrom(x => x.Status.GetDescription()))
                    .ForMember(dest => dest.HasVacina, opt => opt.MapFrom(x => x.HasVacina ? "Sim" : "Não"))
-
+                   .ForMember(dest => dest.HasOferta, opt => opt.MapFrom(x => x.Lancamentos.Any(y => y.EventoId == (eventoId ?? x.Equipes.LastOrDefault().EventoId)) ? "Sim" : "Não"))
                    .ForMember(dest => dest.Equipe, opt => opt.MapFrom(x => x.Equipes.Any() ? x.Equipes.LastOrDefault().Equipe.GetDescription() : null));
 
 

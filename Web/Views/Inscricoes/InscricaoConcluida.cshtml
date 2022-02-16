@@ -8,7 +8,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Seminários IECB | Inscrições</title>
+    <title>Sozo | Inscrições</title>
     <link href="~/Content/bootstrap.css" rel="stylesheet">
     <link href="~/Fonts/font-awesome/css/font-awesome.css" rel="stylesheet">
     <link rel="icon" type="image/png" href="~/Images/logo-iecb.png" />
@@ -17,42 +17,89 @@
     <link href="~/Content/evento.css" rel="stylesheet">
     <link href="~/Content/plugins/sweetalert/sweetalert.css" rel="stylesheet">
 </head>
+<style>
+    p {
+        color: white;
+    }
+</style>
+
 <body class="background-evento">
     <div class="middle-box inscricoes animated fadeInDown ">
-        <div class="row">
+        <div class="row confirm">
             <div class="col-sm-12">
                 <div class="row justify-content-center">
                     <div class="col-sm-offset-3 col-sm-6">
-                        <img class="full-width" src="~/Images/logo-@ViewBag.Participante.Logo" alt="Seminários IECB" />
+                        <img class="full-width" src="~/Images/logo-@ViewBag.Participante.Logo" alt="Sozo" />
                     </div>
                 </div>
-                <div class="row justify-content-center m-l-lg m-r-lg m-t-lg m-b-sm text-white text-center">
-                    <h2>"@ViewBag.Participante.Apelido"</h2>
-                    <h3>Obrigado por se inscrever no @ViewBag.Participante.Evento!</h3>
-                    <h3>Fique atento que apenas o pagamento garante a sua vaga</h3>
-                    <h3>Nos vemos no dia @ViewBag.Participante.DataEvento! Até lá!</h3>
+                <p>
+                    Olá, <strong>@ViewBag.Participante.Apelido</strong>
+                </p>
+                <p>
+                    Estou vendo aqui que você realizou sua inscrição para o SOZO mas para prosseguirmos para a etapa do pagamento, precisamos que você leia alguns avisos importantes:
+                </p>
+                <p>
+                    - O uso de máscara durante o evento é obrigatório;
+                </p>
+                <p>
+                    - Será obrigatório a comprovação da vacinação contra COVID-19 com pelo menos duas doses tomadas até 15 dias antes do evento.
+                </p>
+                <p>
+                    - Para quem <strong>não tomou as vacinas</strong>, será OBRIGATÓRIO a realização do RT-PCR até 48h antes do dia do evento (a partir do dia 15/02). Já o Teste Rápido deverá ser realizado em até 24h antes do dia do evento (a partir do dia 17/02).
+                </p>
+                <p>
+                    - O resultado deve ser NEGATIVO e apresentado no dia do evento ou enviado previamente.
+                </p>
+                <p>
+                    - Caso o seu resultado seja POSITIVO, o valor do evento será reembolsado.
+                </p>
+                <p>
+                    - Caso você esteja com algum sintoma gripal, você NÃO poderá comparecer a este evento, tendo seu valor reembolsado.
+                </p>
+                <p>
+                    Agradecemos a compreensão!
+                </p>
+                <p>
+                    Equipe da Secretaria | SOZO
+                </p>
+                <p>
+                    Ao clicar em continuar você declara que leu e concorda com nossos termos
+
+                </p>
+
+                <div class="pnl-button" style="display:flex;width:100%">
+
+                    <button style="margin:auto" type="button" class="btn btn-primary" onclick="continuar()">Continuar</button>
                 </div>
+            </div>
+
+
+
+        </div>
+        <div class="row pos-confirm d-none">
+            <div class="col-sm-12">
+                <div class="row justify-content-center">
+                    <div class="col-sm-offset-3 col-sm-6">
+                        <img class="full-width" src="~/Images/logo-@ViewBag.Participante.Logo" alt="Sozo" />
+                    </div>
+                </div>               
             </div>
 
             <div class="col-sm-12 p-h-sm text-white text-center">
                 <h2>Formas de Pagamento</h2>
-                <h2>R$ 300,00</h2>
-                <h3>Enviar comprovante para:</h3>
-                <h3 style="        margin-bottom: 40px;
-
-">
-                    Barbie  - (81)9.8811-5271
-                </h3>
-
-                <div class="text-white text-center d-flex flex-column">
-                    <h3>Pagamento via cartão de crédito(Presencial)</h3>
-                    <h3>Pagamento PIX via QR Code ou chave:</h3>
+                <h2 style="margin-top:10px">@ViewBag.Participante.Valor</h2>
+                <div class="text-white text-center d-flex flex-column">      
+                    <h3>Pagamento PIX chave:</h3>
                     <div style="margin-bottom:20px">
 
-                        <h5>E-mail: sves.trindade@gmail.com</h5>
-                    </div>
-                    <img class="m-auto" style="width:33%" src="~/Images/qrcode pix.png" />
+                        <h5>E-mail: chalesdealdeia@iecbrasil.com.br</h5>
+                    </div>           
                 </div>
+                <h3 style="        margin-top: 40px;">Enviar comprovante para:</h3>
+                <h3 >
+                    @ViewBag.Participante.PadrinhoNome - @ViewBag.Participante.PadrinhoFone
+                </h3>
+
             </div>
 
         </div>
@@ -66,6 +113,11 @@
 <script>
     function PagSeguro(id) {
         window.location.href = `/Inscricoes/CheckoutPagSeguro/${id}`;
+    }
+
+    function continuar() {
+        $('.pos-confirm').toggleClass('d-none')
+        $('.confirm').toggleClass('d-none')
     }
 </script>
 

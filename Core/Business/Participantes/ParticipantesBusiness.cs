@@ -17,10 +17,12 @@ namespace Core.Business.Participantes
         private readonly IEventosBusiness eventosBusiness;
         private readonly ICirculosBusiness circulosBusiness;
         private readonly IQuartosBusiness quartosBusiness;
+        private readonly IGenericRepository<EquipanteEvento> equipanteEventoRepository;
 
-        public ParticipantesBusiness(IGenericRepository<Participante> participanteRepository, IQuartosBusiness quartosBusiness, IEventosBusiness eventosBusiness, ICirculosBusiness circulosBusiness)
+        public ParticipantesBusiness(IGenericRepository<Participante> participanteRepository, IGenericRepository<EquipanteEvento> equipanteEventoRepository, IQuartosBusiness quartosBusiness, IEventosBusiness eventosBusiness, ICirculosBusiness circulosBusiness)
         {
             this.participanteRepository = participanteRepository;
+            this.equipanteEventoRepository = equipanteEventoRepository;
             this.eventosBusiness = eventosBusiness;
             this.quartosBusiness = quartosBusiness;
             this.circulosBusiness = circulosBusiness;
@@ -47,7 +49,7 @@ namespace Core.Business.Participantes
 
         public Participante GetParticipanteById(int id)
         {
-            return participanteRepository.GetAll(x => x.Id == id).Include(x => x.Evento).SingleOrDefault();
+            return participanteRepository.GetAll(x => x.Id == id).Include(x => x.Evento).Include(x => x.Padrinho).SingleOrDefault();
         }
 
         public Participante GetParticipanteByReference(string reference)
@@ -189,13 +191,31 @@ namespace Core.Business.Participantes
                 PendenciaContato = false,
                 Boleto = false,
                 PendenciaBoleto = false,
-                Checkin = model.Checkin
+                Checkin = model.Checkin,
+                PadrinhoId = getNextPadrinho(model.EventoId)?.Id
             };
         }
 
         public IQueryable<Participante> GetParticipantesByEvento(int eventoId)
         {
-            return participanteRepository.GetAll(x => x.EventoId == eventoId).Include(x => x.Evento).Include(x => x.Circulos).Include(x => x.Circulos.Select(y => y.Circulo));
+            return participanteRepository.GetAll(x => x.EventoId == eventoId).Include(x => x.Evento).Include(x => x.Padrinho).Include(x => x.Circulos).Include(x => x.Circulos.Select(y => y.Circulo));
+        }
+
+        private Equipante getNextPadrinho(int eventoid)
+        {
+            var query = equipanteEventoRepository
+                 .GetAll(x => x.EventoId == eventoid && x.Equipe == EquipesEnum.Secretaria)
+                 .Include(x => x.Equipante)
+                 .ToList()
+                 .Select(x => new
+                 {
+                     Equipante = x,
+                     Qtd = participanteRepository.GetAll(y => y.PadrinhoId == x.EquipanteId && (y.Status == StatusEnum.Confirmado || y.Status == StatusEnum.Inscrito)).Count()
+                 })
+                 .ToList();
+
+            return query.Any() ? query.OrderBy(x => x.Qtd).FirstOrDefault().Equipante.Equipante : null;
+
         }
 
         public void TogglePendenciaContato(int id)

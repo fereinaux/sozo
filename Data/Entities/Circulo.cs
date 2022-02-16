@@ -15,6 +15,11 @@ namespace Data.Entities
         public int EventoId { get; set; }
         [ForeignKey("EventoId")]
         public Evento Evento { get; set; }
+        public MomentoSozoEnum Momento1 { get; set; }
+        public MomentoSozoEnum Momento2 { get; set; }
+        public MomentoSozoEnum Momento3 { get; set; }
+        public MomentoSozoEnum Momento4 { get; set; }
+        public MomentoSozoEnum Momento5 { get; set; }
         public int? Dirigente1Id { get; set; }
         [ForeignKey("Dirigente1Id")]
         public EquipanteEvento Dirigente1 { get; set; }

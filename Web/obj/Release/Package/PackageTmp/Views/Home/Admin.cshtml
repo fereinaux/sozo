@@ -89,25 +89,25 @@
                     </div>
                 </div>
                 @*<div class="col-xs-6 col-lg-3 p-w-xs">
-                <div class="width100 bloco widget yellow-bg p-md text-center">
-                    <div class="m-b-xs">
-                        <i class="m-b-sm fa fa-barcode fa-3x"></i>
-                        <h1 class="m-xs" id="boletos"></h1>
+            <div class="width100 bloco widget yellow-bg p-md text-center">
+                <div class="m-b-xs">
+                    <i class="m-b-sm fa fa-barcode fa-3x"></i>
+                    <h1 class="m-xs" id="boletos"></h1>
 
-                        <small>Boletos Pendentes</small>
-                    </div>
+                    <small>Boletos Pendentes</small>
                 </div>
             </div>
-            <div class="col-xs-6 col-lg-3 p-w-xs">
-                <div class="width100 bloco widget lazur-bg p-md text-center">
-                    <div class="m-b-xs">
-                        <i class="m-b-sm fab fa-whatsapp fa-3x"></i>
-                        <h1 class="m-xs" id="contatos"></h1>
+        </div>
+        <div class="col-xs-6 col-lg-3 p-w-xs">
+            <div class="width100 bloco widget lazur-bg p-md text-center">
+                <div class="m-b-xs">
+                    <i class="m-b-sm fab fa-whatsapp fa-3x"></i>
+                    <h1 class="m-xs" id="contatos"></h1>
 
-                        <small>Contatos Pendentes</small>
-                    </div>
+                    <small>Contatos Pendentes</small>
                 </div>
-            </div>*@
+            </div>
+        </div>*@
                 @if (User.IsInRole(Usuario.Admin) || User.IsInRole(Usuario.Master))
                 {
                     <div class="col-xs-6 col-lg-6 p-w-xs pointer" onclick="window.location.href='@Url.Action("Index", "Lancamento")'">
@@ -127,6 +127,36 @@
                                 <h2 class="m-xs" id="receita"></h2>
 
                                 <small>Total Receita</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-4 col-lg-4 p-w-xs pointer" onclick="window.location.href='@Url.Action("Index", "Lancamento")'">
+                        <div class="width100 bloco widget blue-bg p-md text-center">
+                            <div class="m-b-xs">
+                                <i class="m-b-sm far fa-money-bill-alt fa-3x"></i>
+                                <h2 class="m-xs" id="saldopix"></h2>
+
+                                <small>Saldo PIX</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-4 col-lg-4 p-w-xs pointer" onclick="window.location.href='@Url.Action("Index", "Lancamento")'">
+                        <div class="width100 bloco widget blue-bg p-md text-center">
+                            <div class="m-b-xs">
+                                <i class="m-b-sm far fa-money-bill-alt fa-3x"></i>
+                                <h2 class="m-xs" id="saldodinheiro"></h2>
+
+                                <small>Saldo Dinheiro</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-4 col-lg-4 p-w-xs pointer" onclick="window.location.href='@Url.Action("Index", "Lancamento")'">
+                        <div class="width100 bloco widget blue-bg p-md text-center">
+                            <div class="m-b-xs">
+                                <i class="m-b-sm far fa-money-bill-alt fa-3x"></i>
+                                <h2 class="m-xs" id="saldo"></h2>
+
+                                <small>Saldo Geral</small>
                             </div>
                         </div>
                     </div>

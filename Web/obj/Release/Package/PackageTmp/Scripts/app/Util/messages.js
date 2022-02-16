@@ -43,9 +43,9 @@ async function ConfirmMessageCancelar(nome) {
 }
 
 function RebciboPagamento(valor, formaPagamento, evento) {
-    return `Aqui está o seu recibo de pagamento do Seminário de Vida no Espírito Santo:/n/n*R$ ${valor} - ${formaPagamento}*${RodapeEvento(evento)}`;
+    return `Aqui está o seu recibo de pagamento do Sozo de Vida no Espírito Santo:/n/n*R$ ${valor} - ${formaPagamento}*${RodapeEvento(evento)}`;
 }
 
 function RodapeEvento(evento) {
-    return `/n/n @Equipe Seminário de Vida no Espírito Santo /n ${moment().format('DD/MM/YYYY HH:mm')}`;
+    return `/n/n *Equipe Sozo*`;
 }

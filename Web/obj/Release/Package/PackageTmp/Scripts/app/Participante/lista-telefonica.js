@@ -113,7 +113,7 @@ function CancelarInscricao(row) {
 
 function GetText(row) {
     if (row.Status == Confirmado) {
-        return `Olá ${row.Nome}, /n/nSeja Bem Vindo ao *${row.Evento}*. Estamos Felizes com sua participação e temos certeza que serão dias muito especiais em sua vida. Aproveite cada minuto desse Seminário!!
+        return `Olá ${row.Nome}, /n/nSeja Bem Vindo ao *${row.Evento}*. Estamos Felizes com sua participação e temos certeza que serão dias muito especiais em sua vida. Aproveite cada minuto desse Sozo!!
 Avisos importantes:
 1.	O evento ocorrerá no *Espaço Colonial de Aldeia, Km 11,5-nº 2554* - Link para o Mapa: https://goo.gl/maps/HYHA1NSx8pWU5F7M8;
 2.	Horário de chegada no dia *22 de novembro às 19h* e encerramento no dia *24 de novembro às 12h*;

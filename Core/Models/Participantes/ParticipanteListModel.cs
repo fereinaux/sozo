@@ -14,7 +14,7 @@ namespace Core.Models.Participantes
         public List<Column> columns { get; set; }
         public Search search { get; set; }
         public List<Order> order { get; set; }
-
+        public int PadrinhoId { get; set; }
     }
     public class ParticipanteListModel
     {

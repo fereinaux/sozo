@@ -7,6 +7,8 @@ using Core.Business.Reunioes;
 using Core.Models.Circulos;
 using Core.Models.Reunioes;
 using SysIgreja.ViewModels;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using Utils.Constants;
@@ -50,11 +52,45 @@ namespace SysIgreja.Controllers
                     Dirigente1 = x.Dirigente1 != null ? UtilServices.CapitalizarNome(x.Dirigente1.Equipante.Nome) : "",
                     Dirigente2 = x.Dirigente2 != null ? UtilServices.CapitalizarNome(x.Dirigente2.Equipante.Nome) : "",
                     QtdParticipantes = circulosBusiness.GetParticipantesByCirculos(x.Id).Count(),
+                    Momento1 = x.Momento1.GetDescription(),
+                    Momento2 = x.Momento2.GetDescription(),
+                    Momento3 = x.Momento3.GetDescription(),
+                    Momento4 = x.Momento4.GetDescription(),
+                    Momento5 = x.Momento5.GetDescription(),
                     Cor = x.Cor.GetDescription()
                 });
 
             return Json(new { data = result }, JsonRequestBehavior.AllowGet);
         }
+
+        [HttpPost]
+        public ActionResult GetMomentosSozo(int EventoId)
+        {
+            var result = circulosBusiness
+                .GetCirculos()
+                .Where(x => x.EventoId == EventoId)
+                .ToList();
+
+            var momentosSozoEnum = Enum.GetValues(typeof(MomentoSozoEnum)).Cast<MomentoSozoEnum>().ToList();
+
+
+            var momentosSozo = new List<MomentoSozoViewModel>();
+            momentosSozoEnum.ForEach(momento =>
+            {
+                momentosSozo.Add(new MomentoSozoViewModel
+                {
+                    Momento = momento.GetDescription(),
+                    Cor1 = result.FirstOrDefault(x => x.Momento1 == momento).Cor.GetDescription(),
+                    Cor2 = result.FirstOrDefault(x => x.Momento2 == momento).Cor.GetDescription(),
+                    Cor3 = result.FirstOrDefault(x => x.Momento3 == momento).Cor.GetDescription(),
+                    Cor4 = result.FirstOrDefault(x => x.Momento4 == momento).Cor.GetDescription(),
+                    Cor5 = result.FirstOrDefault(x => x.Momento5 == momento).Cor.GetDescription()
+                });
+            });
+
+            return Json(new { data = momentosSozo }, JsonRequestBehavior.AllowGet);
+        }
+
 
         [HttpGet]
         public ActionResult GetCirculo(int Id)
@@ -109,7 +145,8 @@ namespace SysIgreja.Controllers
         {
             return Json(new
             {
-                Circulos = circulosBusiness.GetCirculosComParticipantes(EventoId).ToList().Select(x => new {
+                Circulos = circulosBusiness.GetCirculosComParticipantes(EventoId).ToList().Select(x => new
+                {
                     Nome = UtilServices.CapitalizarNome(x.Participante.Nome),
                     ParticipanteId = x.ParticipanteId,
                     CirculoId = x.CirculoId,

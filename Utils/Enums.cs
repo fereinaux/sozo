@@ -36,6 +36,21 @@ namespace Utils.Enums
         Feminino = 2
     }
 
+    public enum MomentoSozoEnum
+    {
+        [Description("Louvor e Adoração")]
+        Louvor = 1,
+        [Description("Sexualidade")]
+        Sexualidade = 2,
+        [Description("Sala de Imersão")]
+        Imersao = 3,
+        [Description("Sala de Oração")]
+        Oracao = 4,
+        [Description("Sala de aconselhamento")]
+        Acolhimento = 5,
+    }
+
+
     public enum EquipesEnum
     {
         [Description("Ordem")]
@@ -51,7 +66,7 @@ namespace Utils.Enums
         [Description("Ligação Interna")]
         LigacaoInterna = 6,
         [Description("Círculos")]
-        Circulo = 7,        
+        Circulo = 7,
         [Description("Louvor")]
         Louvor = 8,
         [Description("Sala")]
@@ -82,7 +97,7 @@ namespace Utils.Enums
         Vigilante = 21,
         [Description("Momento Sozo de Louvor e Adoração")]
         MomentoSozoLouvor = 22,
-        [Description("Sala de Imersão ")]
+        [Description("Sala de Imersão")]
         SalaImersao = 23,
         [Description("Sala de Oração")]
         SalaOracao = 24,
@@ -94,24 +109,14 @@ namespace Utils.Enums
 
     public enum TiposEventoEnum
     {
-        [Nickname("SVES")]
-        [EmailPagSeguro("sves.trindade@gmail.com")]
-        [TokenPagSeguro("ba655565-e03a-4b6d-a6e3-2580cca7e8c9a2f98b924ac2839d219f932121848b0dbfc3-fe90-4770-ab9f-3699835aaad2")]
-        [Description("Seminário de Vida do Espírito Santo")]
-        [Equipes(new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 , 20 ,21})]
-        SVES = 1,
+
         [EmailPagSeguro("sves.trindade@gmail.com")]
         [TokenPagSeguro("ba655565-e03a-4b6d-a6e3-2580cca7e8c9a2f98b924ac2839d219f932121848b0dbfc3-fe90-4770-ab9f-3699835aaad2")]
         [Nickname("SOZO")]
         [Description("SOZO")]
-        [Equipes(new int[] { 1, 2,3, 4, 5, 6, 9, 10, 11, 12, 13, 16, 17, 18, 19, 20, 22, 23, 24, 25, 26 })]
-        SOZO = 2,
-        [EmailPagSeguro("sves.trindade@gmail.com")]
-        [TokenPagSeguro("ba655565-e03a-4b6d-a6e3-2580cca7e8c9a2f98b924ac2839d219f932121848b0dbfc3-fe90-4770-ab9f-3699835aaad2")]
-        [Nickname("SCC")]
-        [Description("Seminário de Crescimento Carismático")]
-        [Equipes(new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21 })]
-        SCC = 3
+        [Equipes(new int[] { 1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13, 16, 17, 18, 19, 20, 22, 23, 24, 25, 26 })]
+        SOZO = 2
+
     }
 
     public enum BancosEnum
@@ -189,7 +194,7 @@ namespace Utils.Enums
     public enum MeioPagamentoPadraoEnum
     {
         [Description("Dinheiro")]
-        Dinheiro,        
+        Dinheiro,
         [Description("Transferência Bancária")]
         Transferencia,
         [Description("Cheque")]
@@ -213,7 +218,7 @@ namespace Utils.Enums
         [Description("Azul Escuro")]
         AzulEscuro,
         [Description("Verde Claro")]
-        VerdeClaro,    
+        VerdeClaro,
         [Description("Verde Escuro")]
         VerdeEscuro,
         [Description("Amarelo")]

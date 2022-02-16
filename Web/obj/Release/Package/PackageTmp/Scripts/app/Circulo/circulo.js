@@ -1,61 +1,27 @@
 ﻿function CarregarTabelaCirculo() {
-    if (IsSozo) {
-        $('#gerenciar').text("Gerenciar Momentos SOZO");
-        $('#participantes-sem').text("Participantes sem Grupo");
-        $("#circulo-dirigentes").html(``)
+    $('#gerenciar').text("Gerenciar Momentos SOZO");
+    $('#participantes-sem').text("Participantes sem Grupo");
+    $("#circulo-dirigentes").html(``)
 
-        var columnsTb = [
-            { data: "Cor", name: "Cor", autoWidth: true },
-            { data: "QtdParticipantes", name: "QtdParticipantes", autoWidth: true },
-            {
-                data: "Id", name: "Id", className: "text-center", orderable: false, width: "15%",
-                "render": function (data, type, row) {
-                    return `
+    var columnsTb = [
+        { data: "Cor", name: "Cor", autoWidth: true },
+        { data: "QtdParticipantes", name: "QtdParticipantes", autoWidth: true },
+        {
+            data: "Id", name: "Id", className: "text-center", orderable: false, width: "15%",
+            "render": function (data, type, row) {
+                return `
                             ${GetButton('PrintCirculo', JSON.stringify(row), 'green', 'fa-print', 'Imprimir')}  
-                            ${GetButton('EditCirculo', JSON.stringify(row), 'blue', 'fa-edit', 'Editar')}                            
                             ${GetButton('DeleteCirculo', data, 'red', 'fa-trash', 'Excluir')}`;
-                }
             }
-        ]
-        $("#circulo-cabecalho").html(`
+        }
+    ]
+    //${GetButton('EditCirculo', JSON.stringify(row), 'blue', 'fa-edit', 'Editar')}                            
+    $("#circulo-cabecalho").html(`
                         <th>Cor</th>
                         <th>Membros </th>
                         <th>Ações</th>`)
-    }
-    else {
-        $('#gerenciar').text("Gerenciar Círculos");
-        $('#participantes-sem').text("Participantes sem Círculo");
-        var columnsTb = [
-            { data: "Dirigente1", name: "Dirigente1", autoWidth: true },
-            { data: "Dirigente2", name: "Dirigente2", autoWidth: true },
-            { data: "Cor", name: "Cor", autoWidth: true },
-            { data: "QtdParticipantes", name: "QtdParticipantes", autoWidth: true },
-            {
-                data: "Id", name: "Id", className: "text-center", orderable: false, width: "15%",
-                "render": function (data, type, row) {
-                    return `
-                            ${GetButton('PrintCirculo', JSON.stringify(row), 'green', 'fa-print', 'Imprimir')}  
-                            ${GetButton('EditCirculo', JSON.stringify(row), 'blue', 'fa-edit', 'Editar')}                            
-                            ${GetButton('DeleteCirculo', data, 'red', 'fa-trash', 'Excluir')}`;
-                }
-            }
-        ]
 
-        $("#circulo-dirigentes").html(` <div class="col-sm-6 p-w-md m-b-sm">
-                                <h5>Dirigente 1</h5>
-                                <select class="form-control chosen-select" id="circulo-dirigente1"></select>
-                            </div>
-                            <div class="col-sm-6 p-w-md m-b-sm">
-                                <h5>Dirigente 2</h5>
-                                <select class="form-control chosen-select" id="circulo-dirigente2"></select>
-                            </div>`)
 
-        $("#circulo-cabecalho").html(`<th>Dirigente 1</th>
-                        <th>Dirigente 2</th>
-                        <th>Cor</th>
-                        <th>Membros </th>
-                        <th>Ações</th>`)
-    }
 
     const tableCirculoConfig = {
         language: languageConfig,
@@ -84,6 +50,61 @@
     $("#table-circulo").DataTable(tableCirculoConfig);
 }
 
+function CarregarTabelaSozo() {
+
+
+    const tableCirculoConfig = {
+        language: languageConfig,
+        lengthMenu: [5],
+        colReorder: false,
+        serverSide: false,
+        deferloading: 0,
+        orderCellsTop: true,
+        fixedHeader: true,
+        filter: true,
+        orderMulti: false,
+        responsive: true, stateSave: true,
+        destroy: true,
+        dom: domConfig,
+        buttons: [
+            {
+                text: 'Imprimir',
+                action: function (e, dt, node, config) {
+                    PrintSozo()
+                }
+            }
+        ],
+        columns: [
+            { data: "Momento", name: "Momento", width: '15%' },
+            { data: "Cor1", name: "Cor1", autoWidth: true },
+            { data: "Cor2", name: "Cor2", autoWidth: true },
+            { data: "Cor3", name: "Cor3", autoWidth: true },
+            { data: "Cor4", name: "Cor4", autoWidth: true },
+            { data: "Cor5", name: "Cor5", autoWidth: true },
+        ],
+        rowCallback: function (row, data, index) {
+
+            for (var i = 0; i < Object.keys(data).length; i++) {
+                if (i > 0) {
+                    $(row).find(`td:eq(${i})`).css('background-color', GetCor(data[Object.keys(data)[i]]));
+                    $(row).find(`td:eq(${i})`).css('color', 'white');
+                }
+            }
+
+        },
+        order: [
+            [0, "asc"]
+        ],
+        ajax: {
+            url: '/Circulo/GetMomentosSozo',
+            datatype: "json",
+            data: { EventoId: $("#circulo-eventoid").val() },
+            type: "POST"
+        }
+    };
+    $("#table-sozo").DataTable(tableCirculoConfig);
+}
+
 $(document).ready(function () {
 
     $("#Participante").on("keyup", function () {
@@ -96,7 +117,85 @@ $(document).ready(function () {
     CarregarTabelaCirculo();
     GetParticipantesSemCirculo();
     GetCirculosComParticipantes();
+    CarregarTabelaSozo()
 });
+
+function PrintSozo() {
+    $.ajax({
+        url: '/Circulo/GetMomentosSozo',
+        data: { EventoId: $("#circulo-eventoid").val() },
+        datatype: "json",
+        type: "POST",
+        success: (result) => {
+            var doc = new jsPDF('l', 'mm', "a4");
+
+            var evento = $("#circulo-eventoid option:selected").text()
+
+            if (evento.includes("SVES"))
+                logo = "sves";
+            else if (evento.includes("SOZO"))
+                logo = "sozo";
+            else
+                logo = "scc";
+
+            var img = new Image();
+            img.src = `/Images/logo-${logo}.png`;
+
+            doc.setFontType("normal");
+            doc.setFontSize(12);
+            doc.addImage(img, 'PNG', 10, 10, 64, 21);
+            doc.text(77, 15, $("#circulo-eventoid option:selected").text());
+
+
+
+            doc.text(77, 20, `Momentos SOZO`);
+
+            doc.text(77, 25, `Data de Impressão: ${moment().format('DD/MM/YYYY HH:mm')}`);;
+            doc.line(10, 38, 290, 38);
+
+            doc.setFontStyle("bold");
+            doc.text(12, 43, "Momento");
+            doc.text(85, 43, "10:00");
+            doc.text(125, 43, "12:00");
+            doc.text(165, 43, "16:00");
+            doc.text(205, 43, "17:00");
+            doc.text(245, 43, "Domingo");
+            doc.line(10, 45, 290, 45);
+            doc.setFontType("normal");
+            height = 50;
+
+            $(result.data).each((index, momento) => {
+                doc.setTextColor("#000000")
+                doc.text(12, height, momento.Momento);
+                doc.setTextColor("#ffffff")
+                doc.setFillColor(GetCor(momento.Cor1));
+                doc.rect(85, height-5, 45, 8, "F");
+                doc.text(87, height, momento.Cor1);
+                doc.setFillColor(GetCor(momento.Cor2));
+                doc.rect(125, height - 5, 45, 8, "F");
+                doc.text(127, height, momento.Cor2);
+                doc.setFillColor(GetCor(momento.Cor3));
+                doc.rect(165, height - 5, 45, 8, "F");
+                doc.text(167, height, momento.Cor3);
+                doc.setFillColor(GetCor(momento.Cor4));
+                doc.rect(205, height - 5, 45, 8, "F");
+                doc.text(207, height, momento.Cor4);
+                doc.setFillColor(GetCor(momento.Cor5));
+                doc.rect(245, height - 5, 45, 8, "F");
+                doc.text(247, height, momento.Cor5);
+                height += 6;
+            });
+
+            height += -3;
+            doc.line(10, height, 290, height);
+            doc.setFontStyle("bold");
+            doc.text(12, height + 5, "Total:");
+            doc.text(24, height + 5, result.data.length.toString());
+
+            PrintDoc(doc);
+        }
+    });
+}
 
 function PrintCirculo(row) {
     $.ajax({
@@ -154,6 +253,32 @@ function PrintCirculo(row) {
             });
 
             AddCount(doc, result.data, height);
+            height += 20;
+            doc.text(12, height, 'Momentos Sozo');
+            height += 8;
+            doc.text(12, height, '10:00 - ');
+            doc.setFontType("normal");
+            doc.text(27, height, row.Momento1);
+            height += 6;
+            doc.setFontStyle("bold");
+            doc.text(12, height, '12:00 - ');
+            doc.setFontType("normal");
+            doc.text(27, height, row.Momento2);
+            height += 6;
+            doc.setFontStyle("bold");
+            doc.text(12, height, '16:00 - ');
+            doc.setFontType("normal");
+            doc.text(27, height, row.Momento3);
+            height += 6;
+            doc.setFontStyle("bold");
+            doc.text(12, height, '18:00 - ');
+            doc.setFontType("normal");
+            doc.text(27, height, row.Momento4);
+            height += 6;
+            doc.setFontStyle("bold");
+            doc.text(12, height, 'Domingo - ');
+            doc.setFontType("normal");
+            doc.text(35, height, row.Momento5);
 
             PrintDoc(doc);
         }
@@ -230,7 +355,7 @@ function PostCirculo() {
                 {
                     Id: $("#circulo-id").val(),
                     EventoId: $("#circulo-eventoid").val(),
-                    Dirigente1Id:  $("#circulo-dirigente1").val(),
+                    Dirigente1Id: $("#circulo-dirigente1").val(),
                     Dirigente2Id: $("#circulo-dirigente2").val(),
                     Cor: $("#circulo-cores").val()
                 }),

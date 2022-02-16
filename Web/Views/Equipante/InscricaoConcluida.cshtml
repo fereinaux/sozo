@@ -1,0 +1,84 @@
+﻿@{
+    Layout = null;
+    ViewBag.Numero = new Random().Next();
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sozo | Inscrições</title>
+    <link href="~/Content/bootstrap.css" rel="stylesheet">
+    <link href="~/Fonts/font-awesome/css/font-awesome.css" rel="stylesheet">
+    <link rel="icon" type="image/png" href="~/Images/logo-iecb.png" />
+    <link href="~/Content/animate.css" rel="stylesheet">
+    <link href="~/Content/style.css" rel="stylesheet">
+    <link href="~/Content/evento.css" rel="stylesheet">
+    <link href="~/Content/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+</head>
+
+
+<body class="background-evento">
+    <div class="middle-box inscricoes animated fadeInDown "> 
+        <div class="row pos-confirm">
+            <div class="col-sm-12">
+                <div class="row justify-content-center">
+                    <div class="col-sm-offset-3 col-sm-6">
+                        <img class="full-width" src="~/Images/logo-@ViewBag.Participante.Logo" alt="Sozo" />
+                    </div>
+                </div>
+                <div class="row justify-content-center m-l-lg m-r-lg m-t-lg m-b-sm text-white text-center">
+                    <h2>"@ViewBag.Participante.Apelido"</h2>
+                    <h3>Obrigado por se inscrever para trabalhar no SOZO!</h3>
+                    <h3>A equipe da Secretaria irá validar tua inscrição, mas não esquece de providenciar a tua Taxa de Amor:</h3>
+                </div>
+            </div>
+
+            <div class="col-sm-12 p-h-sm text-white text-center">
+                
+
+
+                <h2>Formas de Pagamento</h2>
+                <h2 style="margin-top:10px">R$ 175,00</h2>
+                <div class="text-white text-center d-flex flex-column">
+                    <h3>Pagamento PIX chave:</h3>
+                    <div style="margin-bottom:20px">
+
+                        <h5>Telefone: (81)996557814 | Gustavo Martins</h5>
+                    </div>
+                </div>
+                <h3 style="        margin-top: 40px;">Enviar comprovante para:</h3>
+                <h5>
+                    Felipe Reinaux - +55(81)9.9718-7441
+                </h5>
+                <div class="text-white text-center d-flex flex-column m-t-lg">
+                    <h3 style="margin-bottom:0px">Pagamenos no cartão deverão ser feitos presencialmente </h3>
+                    <h3 style="margin-bottom:20px">a equipe de Secretaria de acordo com as seguintes taxas:</h3>
+                        <h5>1x 180,23</h5>
+                        <h5>2x 183,42</h5>
+                        <h5>3x 184,46</h5>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>
+<style>
+    p {
+        color: white;
+    }
+</style>
+<script src="~/Scripts/jquery-3.1.1.min.js"></script>
+<script src="~/Scripts/plugins/sweetalert/sweetalert.min.js"></script>
+
+<script>
+    function PagSeguro(id) {
+        window.location.href = `/Inscricoes/CheckoutPagSeguro/${id}`;
+    }
+  
+</script>
+
+

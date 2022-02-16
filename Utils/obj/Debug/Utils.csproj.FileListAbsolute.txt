@@ -38,3 +38,13 @@ C:\Users\User\Source\Repos\Seminarios IECB\Utils\obj\Debug\Utils.pdb
 C:\Users\User\source\repos\Seminarios IECB\Utils\bin\Debug\AutoMapper.dll
 C:\Users\User\source\repos\Seminarios IECB\Utils\obj\Debug\Utils.csproj.AssemblyReference.cache
 C:\Users\User\source\repos\Seminarios IECB\Utils\bin\Debug\System.Linq.Dynamic.dll
+C:\Users\User\source\repos\sozo\Utils\bin\Debug\Utils.dll
+C:\Users\User\source\repos\sozo\Utils\bin\Debug\Utils.pdb
+C:\Users\User\source\repos\sozo\Utils\bin\Debug\AutoMapper.dll
+C:\Users\User\source\repos\sozo\Utils\bin\Debug\EPPlus.dll
+C:\Users\User\source\repos\sozo\Utils\bin\Debug\System.Linq.Dynamic.dll
+C:\Users\User\source\repos\sozo\Utils\obj\Debug\Utils.csproj.AssemblyReference.cache
+C:\Users\User\source\repos\sozo\Utils\obj\Debug\Utils.csproj.CoreCompileInputs.cache
+C:\Users\User\source\repos\sozo\Utils\obj\Debug\Utils.csproj.CopyComplete
+C:\Users\User\source\repos\sozo\Utils\obj\Debug\Utils.dll
+C:\Users\User\source\repos\sozo\Utils\obj\Debug\Utils.pdb

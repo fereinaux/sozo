@@ -234,11 +234,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\User\\source\\repos\\Seminarios IECB\\Utils\\Utils.csproj",
+      "projectUniqueName": "C:\\Users\\User\\source\\repos\\sozo\\Utils\\Utils.csproj",
       "projectName": "Utils",
-      "projectPath": "C:\\Users\\User\\source\\repos\\Seminarios IECB\\Utils\\Utils.csproj",
+      "projectPath": "C:\\Users\\User\\source\\repos\\sozo\\Utils\\Utils.csproj",
       "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\User\\source\\repos\\Seminarios IECB\\Utils\\obj\\",
+      "outputPath": "C:\\Users\\User\\source\\repos\\sozo\\Utils\\obj\\",
       "projectStyle": "PackageReference",
       "skipContentFileWrite": true,
       "configFilePaths": [

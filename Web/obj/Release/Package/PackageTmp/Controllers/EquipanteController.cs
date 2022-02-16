@@ -14,6 +14,7 @@ using Data.Entities;
 using SysIgreja.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Linq.Dynamic;
 using System.Web.Mvc;
@@ -25,7 +26,6 @@ using Utils.Services;
 namespace SysIgreja.Controllers
 {
 
-    [Authorize(Roles = Usuario.Master + "," + Usuario.Admin + "," + Usuario.Secretaria)]
     public class EquipanteController : Controller
     {
         private readonly IEquipantesBusiness equipantesBusiness;
@@ -38,6 +38,7 @@ namespace SysIgreja.Controllers
         private readonly IContaBancariaBusiness contaBancariaBusiness;
         private readonly IDatatableService datatableService;
         private readonly IMapper mapper;
+        private readonly int qtdReunioes;
 
 
         public EquipanteController(IEquipantesBusiness equipantesBusiness, IDatatableService datatableService, IEventosBusiness eventosBusiness, IEquipesBusiness equipesBusiness, ILancamentoBusiness lancamentoBusiness, IReunioesBusiness reunioesBusiness, IMeioPagamentoBusiness meioPagamentoBusiness, IContaBancariaBusiness contaBancariaBusiness, IArquivosBusiness arquivoBusiness)
@@ -51,7 +52,8 @@ namespace SysIgreja.Controllers
             this.meioPagamentoBusiness = meioPagamentoBusiness;
             this.reunioesBusiness = reunioesBusiness;
             this.datatableService = datatableService;
-            mapper = new MapperRealidade(reunioesBusiness.GetReunioes(eventosBusiness.GetEventoAtivo().Id).Where(x => x.DataReuniao < System.DateTime.Today).Count()).mapper;
+            qtdReunioes = reunioesBusiness.GetReunioes(eventosBusiness.GetEventoAtivo().Id).Where(x => x.DataReuniao < System.DateTime.Today).Count();
+            mapper = new MapperRealidade(qtdReunioes).mapper;
         }
 
 
@@ -107,6 +109,7 @@ namespace SysIgreja.Controllers
             }
             else
             {
+                var eventoId = eventosBusiness.GetEventoAtivo().Id;
                 var result = equipantesBusiness.GetEquipantes();
 
                 var totalResultsCount = result.Count();
@@ -120,7 +123,66 @@ namespace SysIgreja.Controllers
 
                 try
                 {
-                    result = result.OrderBy(model.columns[model.order[0].column].name + " " + model.order[0].dir);
+                    if (model.columns[model.order[0].column].name == "HasOferta")
+                    {
+                        if (model.order[0].dir == "asc")
+                        {
+                            result = result.OrderBy(x => new
+                            {
+                                Order = x.Lancamentos.Where(y => y.EventoId == eventoId).Any()
+                            });
+
+                        }
+                        else
+                        {
+                            result = result.OrderByDescending(x => new
+                            {
+                                Order = x.Lancamentos.Where(y => y.EventoId == eventoId).Any()
+                            });
+                        }
+
+                    } else if (model.columns[model.order[0].column].name == "Faltas")
+                    {
+                        if (model.order[0].dir == "asc")
+                        {
+                            result = result.OrderBy(x => new
+                            {
+                                Order = qtdReunioes - x.Equipes.OrderByDescending(z => z.EventoId).FirstOrDefault().Presencas.Count()
+                            });
+
+                        }
+                        else
+                        {
+                            result = result.OrderByDescending(x => new
+                            {
+                                Order = qtdReunioes - x.Equipes.OrderByDescending(z => z.EventoId).FirstOrDefault().Presencas.Count()
+                            });
+                        }
+
+                    }
+                    else if (model.columns[model.order[0].column].name == "Equipe")
+                    {
+                        if (model.order[0].dir == "asc")
+                        {
+                            result = result.OrderBy(x => new
+                            {
+                                Order = x.Equipes.OrderByDescending(z => z.EventoId).FirstOrDefault().Equipe
+                            });
+
+                        }
+                        else
+                        {
+                            result = result.OrderByDescending(x => new
+                            {
+                                Order = x.Equipes.OrderByDescending(z => z.EventoId).FirstOrDefault().Equipe
+                            });
+                        }
+
+                    }
+                    else
+                    {
+                        result = result.OrderBy(model.columns[model.order[0].column].name + " " + model.order[0].dir);
+                    }
                 }
                 catch (Exception)
                 {
@@ -136,6 +198,37 @@ namespace SysIgreja.Controllers
                     recordsFiltered = filteredResultsCount,
                 }, JsonRequestBehavior.AllowGet);
             }
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        public ActionResult VerificaCadastro(string Fone)
+        {
+            var equipante = equipantesBusiness.GetEquipantes().FirstOrDefault(x => x.Fone.Replace("+", "").Replace("(", "").Replace(")", "").Replace(".", "").Replace("-", "") == Fone.Replace("+", "").Replace("(", "").Replace(")", "").Replace(".", "").Replace("-", ""));
+
+            if (equipante != null)
+                return Json(Url.Action("InscricaoConcluida", new { Id = equipante.Id }));
+            else
+                return new HttpStatusCodeResult(200);
+        }
+
+        public ActionResult InscricaoConcluida(int Id)
+        {
+            Equipante equipante = equipantesBusiness.GetEquipanteById(Id);
+            var eventoAtual = eventosBusiness.GetEventoAtivo();
+
+            ViewBag.Participante = new InscricaoConcluidaViewModel
+            {
+                Id = equipante.Id,
+                Apelido = equipante.Nome,
+                Logo = eventoAtual.TipoEvento.GetNickname() + ".png",
+                Evento = $"{eventoAtual.TipoEvento.GetDescription()}",
+                Valor = eventoAtual.Valor.ToString("C", CultureInfo.CreateSpecificCulture("pt-BR")),
+                DataEvento = eventoAtual.DataEvento.ToString("dd/MM/yyyy"),
+            };
+
+            return View("InscricaoConcluida");
+
         }
 
         [HttpPost]
@@ -162,12 +255,21 @@ namespace SysIgreja.Controllers
             return Json(new { Equipante = equipante }, JsonRequestBehavior.AllowGet);
         }
 
+        [AllowAnonymous]
         [HttpPost]
         public ActionResult PostEquipante(PostEquipanteModel model)
         {
-            equipantesBusiness.PostEquipante(model);
+            var equipante = equipantesBusiness.PostEquipante(model);
 
-            return new HttpStatusCodeResult(200);
+            if (model.Inscricao)
+            {
+                return Json(Url.Action("InscricaoConcluida", new { Id = equipante.Id }));
+            }
+            else
+            {
+                return new HttpStatusCodeResult(200);
+            }
+
         }
 
         [HttpPost]
@@ -190,6 +292,15 @@ namespace SysIgreja.Controllers
         public ActionResult ToggleVacina(int Id)
         {
             equipantesBusiness.ToggleVacina(Id);
+
+            return new HttpStatusCodeResult(200);
+        }
+
+
+        [HttpPost]
+        public ActionResult Ativar(int Id)
+        {
+            equipantesBusiness.Ativar(Id);
 
             return new HttpStatusCodeResult(200);
         }

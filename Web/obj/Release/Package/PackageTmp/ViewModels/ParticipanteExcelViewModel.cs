@@ -33,5 +33,7 @@ namespace SysIgreja.ViewModels
         public string NomeParente { get; set; }
         [DisplayName("Situação")]
         public string Situacao { get; set; }
+        [DisplayName("Data de Cadastro")]
+        public string DataCadastro { get; set; }
     }
 }

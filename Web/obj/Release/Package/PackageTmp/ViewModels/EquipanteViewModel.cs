@@ -10,5 +10,7 @@
         public string Equipe { get; set; }
         public string Sexo { get; set; }
         public bool Oferta { get; set; }
+        public bool Vacina { get; internal set; }
+        public object Faltas { get; internal set; }
     }
 }

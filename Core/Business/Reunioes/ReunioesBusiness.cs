@@ -1,4 +1,5 @@
-﻿using Core.Models.Eventos;
+﻿using Core.Business.Equipes;
+using Core.Models.Eventos;
 using Core.Models.Reunioes;
 using Data.Entities;
 using Data.Repository;
@@ -10,11 +11,13 @@ namespace Core.Business.Reunioes
 {
     public class ReunioesBusiness : IReunioesBusiness
     {
-        private readonly IGenericRepository<ReuniaoEvento> reuniaoRepository;        
+        private readonly IGenericRepository<ReuniaoEvento> reuniaoRepository;
+        private readonly IEquipesBusiness equipesBusiness;
 
-        public ReunioesBusiness(IGenericRepository<ReuniaoEvento> reuniaoRepository)
+        public ReunioesBusiness(IGenericRepository<ReuniaoEvento> reuniaoRepository, IEquipesBusiness equipesBusiness)
         {
-            this.reuniaoRepository = reuniaoRepository;            
+            this.reuniaoRepository = reuniaoRepository;
+            this.equipesBusiness = equipesBusiness;
         }
 
         public void DeleteReuniao(int id)
@@ -27,6 +30,15 @@ namespace Core.Business.Reunioes
         {
             return reuniaoRepository.GetAll().OrderByDescending(x => x.DataReuniao).First();
         }
+
+        public int? GetFaltasByEquipanteId(int equipanteId, int eventoId)
+        {
+            if (equipesBusiness.GetEquipeAtual(eventoId, equipanteId) != null)
+                return reuniaoRepository.GetAll(x => x.EventoId == eventoId && x.DataReuniao < System.DateTime.Today && !x.Presenca.Any(y => y.EquipanteEvento.EquipanteId == equipanteId)).Include(x => x.Presenca).Count();
+
+            return null;
+        }
+
 
         public ReuniaoEvento GetReuniaoById(int id)
         {

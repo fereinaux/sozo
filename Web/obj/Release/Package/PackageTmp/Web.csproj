@@ -757,6 +757,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\UnityConfig.cs" />
+    <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\CentroCustoController.cs" />
     <Compile Include="Controllers\QuartoController.cs" />
@@ -814,6 +815,7 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\bootstrap4.css" />
+    <Content Include="Content\coordenador.css" />
     <Content Include="Content\email.css" />
     <Content Include="Content\Images\30horas.png" />
     <Content Include="Content\Images\bb.png" />
@@ -995,6 +997,7 @@
     <Content Include="Images\logo-scc.png" />
     <Content Include="Images\logo-sozo.png" />
     <Content Include="Images\logo-sves.png" />
+    <Content Include="Scripts\app\Inscricoes\inscricoesequipe.js" />
     <Content Include="Scripts\app\Participante\checkin.js" />
     <Content Include="Scripts\app\Quarto\quarto.js" />
     <Content Include="Scripts\app\Equipante\equipante.js" />
@@ -1113,6 +1116,9 @@
     <None Include="Properties\PublishProfiles\Seminários.pubxml" />
     <Content Include="Views\Inscricoes\InscricaoCompleta.cshtml" />
     <Content Include="Views\Inscricoes\InscricaoEspera.cshtml" />
+    <Content Include="Views\Login\Index.cshtml" />
+    <Content Include="Views\Inscricoes\Equipe.cshtml" />
+    <Content Include="Views\Equipante\InscricaoConcluida.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

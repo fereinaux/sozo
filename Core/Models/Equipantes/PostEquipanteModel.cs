@@ -15,6 +15,7 @@ namespace Core.Models.Equipantes
         public string Apelido { get; set; }
         public DateTime DataNascimento { get; set; }
         public string Email { get; set; }
+        public string Congregacao { get; set; }
         public string Fone { get; set; }
         public bool HasRestricaoAlimentar { get; set; }
         public string RestricaoAlimentar { get; set; }
@@ -24,6 +25,7 @@ namespace Core.Models.Equipantes
         public bool HasVacina { get; set; }
         public string Alergia { get; set; }
         public bool Checkin { get; set; }
+        public bool Inscricao { get; set; }
         public SexoEnum Sexo { get; set; }
     }
 }

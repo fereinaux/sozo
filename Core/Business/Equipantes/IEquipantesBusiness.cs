@@ -7,10 +7,12 @@ namespace Core.Business.Equipantes
     {
         IQueryable<Data.Entities.Equipante> GetEquipantes();        
         Data.Entities.Equipante GetEquipanteById(int id);
-        void PostEquipante(PostEquipanteModel model);
+        Data.Entities.Equipante PostEquipante(PostEquipanteModel model);
         void DeleteEquipante(int id);
         void ToggleSexo(int id);
+        void Ativar(int id);
         void ToggleVacina(int id);
         void ToggleCheckin(int id);
     }
 }
+

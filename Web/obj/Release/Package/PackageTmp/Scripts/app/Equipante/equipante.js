@@ -32,29 +32,38 @@
                 }
             },
             { data: "Nome", name: "Nome", autoWidth: true },
-            { data: "Idade", name: "Idade", autoWidth: true },
+            { data: "Idade", name: "DataNascimento", autoWidth: true },
             { data: "Equipe", name: "Equipe", autoWidth: true },
             { data: "Faltas", name: "Faltas", autoWidth: true },
             {
+                data: "HasOferta", name: "HasOferta", autoWidth: true,  render: function (data, type, row) {
+                    if (row.Status == "Em Espera") {
+                        return `<span style="font-size:13px" class="text-center label label-default}">Em Espera</span>`;
+                    }
+                    return `<span style="font-size:13px" class="text-center label label-${row.HasOferta ? 'primary' : 'warning'}">${row.HasOferta ? 'Pago' : 'Pendente'}</span>`;
+                }
+            },
+            {
                 data: "Id", name: "Id", orderable: false, width: "20%",
                 "render": function (data, type, row) {
-                    return `   
+                    return row.Status == 'Em Espera' ? GetButton('Ativar', data, 'verde', 'fas fa-check', 'Ativar Inscrição') : `
 
 <form enctype="multipart/form-data" id="frm-vacina${data}" method="post" novalidate="novalidate">
 ${GetAnexosButton('Anexos', data, row.QtdAnexos)}
                               
 ${!row.HasVacina ? ` <label for="arquivo${data}" class="inputFile">
                                 <span style="font-size:18px" class="text-mutted pointer p-l-xs"><i class="fa fa-syringe" aria-hidden="true" title="Vacina"></i></span>
-                                <input onchange="PostVacina(${data})" style="display: none;" class="custom-file-input inputFile" id="arquivo${data}" name="arquivo${data}" type="file" value="">
+                                <input onchange="PostVacina(${data},'${row.Nome}')" style="display: none;" class="custom-file-input inputFile" id="arquivo${data}" name="arquivo${data}" type="file" value="">
                             </label>`: `<span style="font-size:18px" class="text-success p-l-xs pointer" onclick="toggleVacina(${data})"><i class="fa fa-syringe" aria-hidden="true" title="Vacina"></i></span>`}
                            
 ${GetIconWhatsApp(row.Fone)}
                             ${GetIconTel(row.Fone)}
+                         
                             ${GetButton('Pagamentos', JSON.stringify(row), 'verde', 'far fa-money-bill-alt', 'Pagamentos')}
                             ${GetButton('EditEquipante', data, 'blue', 'fa-edit', 'Editar')}                            
                             ${GetButton('DeleteEquipante', data, 'red', 'fa-trash', 'Excluir')}
-                        </form> 
-`;
+                        </form>
+`
                 }
             }
         ],
@@ -92,7 +101,7 @@ function GetAnexosLancamento(id) {
         fixedHeader: true,
         filter: true,
         orderMulti: false,
-        
+
         destroy: true,
         dom: domConfigNoButtons,
         columns: [
@@ -142,7 +151,7 @@ function GetAnexos(id) {
         fixedHeader: true,
         filter: true,
         orderMulti: false,
-        
+
         destroy: true,
         dom: domConfigNoButtons,
         columns: [
@@ -160,7 +169,7 @@ function GetAnexos(id) {
             [0, "asc"]
         ],
         ajax: {
-            url: '/Arquivo/GetArquivosEquipanteEvento',
+            url: '/Arquivo/GetArquivosEquipante',
             data: { equipanteid: id ? id : $("#EquipanteIdModal").val(), eventoid: $("#equipante-eventoid").val() },
             datatype: "json",
             type: "POST"
@@ -324,10 +333,12 @@ function toggleFoto(id) {
     )
 }
 
-function PostVacina(id) {
+function PostVacina(id,nome) {
     var dataToPost = new FormData($(`#frm-vacina${id}`)[0]);
+    var filename = dataToPost.get(`arquivo${id}`).name
+    var arquivo = new File([dataToPost.get(`arquivo${id}`)], 'Vacina ' + nome + filename.substr(filename.indexOf('.')));
+    dataToPost.set('Arquivo', arquivo)
     dataToPost.set('EquipanteId', id)
-    dataToPost.set('Arquivo', dataToPost.get(`arquivo${id}`))
     $.ajax(
         {
             processData: false,
@@ -337,6 +348,25 @@ function PostVacina(id) {
             url: "Arquivo/PostArquivo",
             success: function () {
                 toggleVacina(id)
+
+            }
+        });
+}
+
+function Ativar(id) {
+    $.ajax(
+        {
+            datatype: "json",
+            type: "POST",
+            contentType: 'application/json; charset=utf-8',
+            url: "Equipante/Ativar",
+            data: JSON.stringify(
+                {
+                    Id: id
+                }),
+
+            success: function () {
+                CarregarTabelaEquipante()
 
             }
         });
@@ -365,9 +395,14 @@ function PostArquivo() {
 
     var dataToPost = new FormData($('#frm-upload-arquivo-modal')[0]);
     dataToPost.set('arquivo', dataToPost.get('arquivo-modal'))
+    dataToPost.set('LancamentoId', dataToPost.get('LancamentoIdModal'))
+    if (dataToPost.get('LancamentoIdModal')) {
+        var filename = dataToPost.get('arquivo-modal').name
+        var arquivo = new File([dataToPost.get('arquivo-modal')], 'Pagamento ' + realista.Nome + filename.substr(filename.indexOf('.')));
+        dataToPost.set('arquivo', arquivo)
+    }
     dataToPost.set('EventoId', $("#equipante-eventoid").val())
     dataToPost.set('EquipanteId', dataToPost.get('EquipanteIdModal'))
-    dataToPost.set('LancamentoId', dataToPost.get('LancamentoIdModal'))
     $.ajax(
         {
             processData: false,
@@ -441,7 +476,7 @@ function CarregarTabelaPagamentos(id) {
         fixedHeader: true,
         filter: true,
         orderMulti: false,
-        
+
         destroy: true,
         dom: domConfigNoButtons,
         columns: [
@@ -466,12 +501,14 @@ function CarregarTabelaPagamentos(id) {
             type: "POST"
         }
     };
+    $('#EquipanteIdModal').val(id)
     $("#table-pagamentos").DataTable(tablePagamentosConfig);
 }
 
 function Pagamentos(row) {
+    realista = row
     $("#pagamentos-whatsapp").val(row.Fone);
-    $("#pagamentos-valor").val($("#pagamentos-valor").data("valor"));
+    $("#pagamentos-valor").val(175);
     $("#pagamentos-equipanteid").val(row.Id);
     $("#pagamentos-meiopagamento").val($("#pagamentos-meiopagamento option:first").val());
     CarregarTabelaPagamentos(row.Id);

@@ -8,5 +8,7 @@
         public string Evento { get; set; }
         public string DataEvento { get; set; }
         public string Valor { get; set; }
+        public string PadrinhoFone { get; set; }
+        public string PadrinhoNome { get; set; }
     }
 }

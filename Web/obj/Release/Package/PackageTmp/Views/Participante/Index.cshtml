@@ -20,9 +20,9 @@
     <div class="ibox">
         <div class="ibox-title" style="display: flex;justify-content: space-between;">
             <h4>@ViewBag.Title</h4>
-            <div class="ibox-tools pull-right w-300">
+            <div style=" width: 50%;" class="ibox-tools pull-right">
                 <div class="row">
-                    <div class="col-sm-8">
+                    <div class="col-sm-5">
                         <select class="form-control" id="participante-eventoid" onchange="CarregarTabelaParticipante()">
                             @foreach (var evento in ViewBag.Eventos)
                             {
@@ -31,6 +31,10 @@
                         </select>
                     </div>
                     <div class="col-sm-4">
+                        <select class="form-control" id="participante-padrinhoid" onchange="CarregarTabelaParticipante()">
+                        </select>
+                    </div>
+                    <div class="col-sm-3">
                         <button class="btn btn-default" id="btn_Adicionar" onclick="EditParticipante(0)">Adicionar</button>
                     </div>
                 </div>
@@ -44,6 +48,7 @@
                         <th></th>
                         <th>Nome</th>
                         <th>Idade</th>
+                        <th>Padrinho</th>
                         <th>Status</th>
                         <th>Ações</th>
                     </tr>
@@ -119,7 +124,7 @@
 
 
                         <div class="col-sm-12 p-w-md m-t-md text-center">
-                            <h5>Tem algum Parente fazendo o Seminário?</h5>
+                            <h5>Tem algum Parente fazendo o Sozo?</h5>
 
                             <div class="radio i-checks-green inline"><label> <input type="radio" id="has-parente" value="true" name="participante-hasparente"> <i></i> Sim </label></div>
                             <div class="radio i-checks-green inline"><label> <input type="radio" id="not-parente" checked="" value="false" name="participante-hasparente"> <i></i> Não </label></div>

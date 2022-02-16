@@ -9,8 +9,7 @@ using Utils.Extensions;
 
 namespace Core.Business.Equipantes
 {
-    public class EquipantesBusiness : IEquipantesBusiness
-    {
+    public class EquipantesBusiness : IEquipantesBusiness{
         private readonly IGenericRepository<Equipante> equipanteRepository;        
 
         public EquipantesBusiness(IGenericRepository<Equipante> equipanteRepository)
@@ -34,7 +33,7 @@ namespace Core.Business.Equipantes
             return equipanteRepository.GetAll();
         }
 
-        public void PostEquipante(PostEquipanteModel model)
+        public Equipante PostEquipante(PostEquipanteModel model)
         {
             Equipante equipante = null;
 
@@ -66,7 +65,7 @@ namespace Core.Business.Equipantes
                     DataNascimento = model.DataNascimento.AddHours(5),
                     Fone = model.Fone,
                     Email = model.Email,
-                    Status = StatusEnum.Ativo,
+                    Status = model.Inscricao ? StatusEnum.Espera : StatusEnum.Ativo,
                     HasAlergia = model.HasAlergia,
                     Alergia = model.HasAlergia ? model.Alergia : null,
                     HasMedicacao = model.HasMedicacao,
@@ -80,6 +79,7 @@ namespace Core.Business.Equipantes
             }         
             
             equipanteRepository.Save();
+            return equipante;
         }
 
         public void ToggleSexo(int id)
@@ -102,6 +102,14 @@ namespace Core.Business.Equipantes
         {
             var equipante = GetEquipanteById(id);
             equipante.Checkin = !equipante.Checkin;
+            equipanteRepository.Update(equipante);
+            equipanteRepository.Save();
+        }
+
+        public void Ativar(int id)
+        {
+            var equipante = GetEquipanteById(id);
+            equipante.Status = StatusEnum.Ativo;
             equipanteRepository.Update(equipante);
             equipanteRepository.Save();
         }

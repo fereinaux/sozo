@@ -188,7 +188,7 @@ namespace SysIgreja.Controllers
         [HttpGet]
         public ActionResult GetParticipantesByCirculo(int CirculoId)
         {
-            var result = circulosBusiness.GetParticipantesByCirculos(CirculoId).ToList().Select(x => new
+            var result = circulosBusiness.GetParticipantesByCirculos(CirculoId).ToList().OrderBy(x => x.Participante.Nome).Select(x => new
             {
                 Circulo = x.Circulo.Cor.GetDescription(),
                 Nome = UtilServices.CapitalizarNome(x.Participante.Nome),
@@ -292,7 +292,7 @@ namespace SysIgreja.Controllers
 
         [HttpPost]
         public ActionResult GetParticipantesSelect(int EventoId)
-        {         
+        {
 
             var result = participantesBusiness
             .GetParticipantesByEvento(EventoId)
@@ -312,25 +312,18 @@ namespace SysIgreja.Controllers
                 Guid g = Guid.NewGuid();
 
                 Session[g.ToString()] = datatableService.GenerateExcel(participantesBusiness
-                .GetParticipantesByEvento(model.EventoId).Select(x => new ParticipanteExcelViewModel
+                .GetParticipantesByEvento(model.EventoId).ToList().Select(x => new ParticipanteExcelViewModel
                 {
                     Nome = UtilServices.CapitalizarNome(x.Nome),
-                    Apelido = UtilServices.CapitalizarNome(x.Apelido),
+
                     DataNascimento = x.DataNascimento.ToString("dd/MM/yyyy"),
                     Idade = UtilServices.GetAge(x.DataNascimento),
                     Sexo = x.Sexo.GetDescription(),
                     Fone = x.Fone,
                     Email = x.Email,
-                    Endereco = $"{x.Logradouro} {x.Complemento}",
-                    Bairro = x.Bairro,
-                    NomeParente = x.HasParente ? UtilServices.CapitalizarNome(x.Parente) : "",
-                    NomeConvite = UtilServices.CapitalizarNome(x.NomeConvite),
-                    FoneConvite = x.FoneConvite,
                     Congregacao = x.Congregacao,
-                    Alergia = x.Alergia,
-                    Medicacao = x.Medicacao,
-                    RestricaoAlimentar = x.RestricaoAlimentar,
-                    Situacao = x.Status.GetDescription()
+                    Situacao = x.Status.GetDescription(),
+                    DataCadastro = x.DataCadastro?.ToString("dd/MM/yyyy")
 
                 }).ToList());
 
@@ -345,11 +338,18 @@ namespace SysIgreja.Controllers
                 var totalResultsCount = result.Count();
                 var filteredResultsCount = totalResultsCount;
 
+                if (model.PadrinhoId > 0)
+                {
+                    result = result.Where(x => (x.PadrinhoId == model.PadrinhoId));
+                    filteredResultsCount = result.Count();
+                }
+
                 if (model.search.value != null)
                 {
                     result = result.Where(x => (x.Nome.Contains(model.search.value)));
                     filteredResultsCount = result.Count();
                 }
+
 
                 try
                 {
@@ -390,6 +390,7 @@ namespace SysIgreja.Controllers
                     Nome = UtilServices.CapitalizarNome(x.Nome),
                     Apelido = UtilServices.CapitalizarNome(x.Apelido),
                     DataNascimento = x.DataNascimento.ToString("dd/MM/yyyy"),
+                    DataCadastro = x.DataCadastro?.ToString("dd/MM/yyyy"),
                     Idade = UtilServices.GetAge(x.DataNascimento),
                     Sexo = x.Sexo.GetDescription(),
                     Fone = x.Fone,
@@ -511,6 +512,13 @@ namespace SysIgreja.Controllers
             participantesBusiness.ToggleVacina(Id);
 
             return new HttpStatusCodeResult(200);
+        }
+
+        [HttpGet]
+        public ActionResult GetPadrinhos(int eventoId)
+        {
+            return Json(new { Padrinhos = participantesBusiness.GetParticipantesByEvento(eventoId).Select(x => new { Id = x.PadrinhoId, Nome = x.Padrinho.Nome }).Distinct().ToList() }, JsonRequestBehavior.AllowGet);
+
         }
 
         [HttpPost]

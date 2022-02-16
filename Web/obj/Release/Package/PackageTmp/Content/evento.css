@@ -33,7 +33,7 @@ h2:after {
 /*LOGIN*/
 
 .loginscreen.middle-box {
-    background-color: #504d4b8f;
+    background-color: #0b0b0bd6;
     height: 550px;
     width: 400px !important;
     position: absolute;
@@ -78,7 +78,7 @@ h2:after {
 }
 
 .inscricoes.middle-box {
-    background-color: #504d4b8f;
+    background-color: #0b0b0bd6;
     height: 80%;
     max-height: 80%;
     position: absolute;

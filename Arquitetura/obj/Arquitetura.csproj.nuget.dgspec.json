@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\User\\source\\repos\\Seminarios IECB\\Arquitetura\\Arquitetura.csproj": {}
+    "C:\\Users\\User\\source\\repos\\sozo\\Arquitetura\\Arquitetura.csproj": {}
   },
   "projects": {
-    "C:\\Users\\User\\source\\repos\\Seminarios IECB\\Arquitetura\\Arquitetura.csproj": {
+    "C:\\Users\\User\\source\\repos\\sozo\\Arquitetura\\Arquitetura.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\User\\source\\repos\\Seminarios IECB\\Arquitetura\\Arquitetura.csproj",
+        "projectUniqueName": "C:\\Users\\User\\source\\repos\\sozo\\Arquitetura\\Arquitetura.csproj",
         "projectName": "Arquitetura",
-        "projectPath": "C:\\Users\\User\\source\\repos\\Seminarios IECB\\Arquitetura\\Arquitetura.csproj",
+        "projectPath": "C:\\Users\\User\\source\\repos\\sozo\\Arquitetura\\Arquitetura.csproj",
         "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\User\\source\\repos\\Seminarios IECB\\Arquitetura\\obj\\",
+        "outputPath": "C:\\Users\\User\\source\\repos\\sozo\\Arquitetura\\obj\\",
         "projectStyle": "PackageReference",
         "skipContentFileWrite": true,
         "configFilePaths": [
@@ -28,14 +28,14 @@
         "frameworks": {
           "net472": {
             "projectReferences": {
-              "C:\\Users\\User\\source\\repos\\Seminarios IECB\\Core\\Core.csproj": {
-                "projectPath": "C:\\Users\\User\\source\\repos\\Seminarios IECB\\Core\\Core.csproj"
+              "C:\\Users\\User\\source\\repos\\sozo\\Core\\Core.csproj": {
+                "projectPath": "C:\\Users\\User\\source\\repos\\sozo\\Core\\Core.csproj"
               },
-              "C:\\Users\\User\\source\\repos\\Seminarios IECB\\Data\\Data.csproj": {
-                "projectPath": "C:\\Users\\User\\source\\repos\\Seminarios IECB\\Data\\Data.csproj"
+              "C:\\Users\\User\\source\\repos\\sozo\\Data\\Data.csproj": {
+                "projectPath": "C:\\Users\\User\\source\\repos\\sozo\\Data\\Data.csproj"
               },
-              "C:\\Users\\User\\source\\repos\\Seminarios IECB\\Utils\\Utils.csproj": {
-                "projectPath": "C:\\Users\\User\\source\\repos\\Seminarios IECB\\Utils\\Utils.csproj"
+              "C:\\Users\\User\\source\\repos\\sozo\\Utils\\Utils.csproj": {
+                "projectPath": "C:\\Users\\User\\source\\repos\\sozo\\Utils\\Utils.csproj"
               }
             }
           }
@@ -71,14 +71,14 @@
         }
       }
     },
-    "C:\\Users\\User\\source\\repos\\Seminarios IECB\\Core\\Core.csproj": {
+    "C:\\Users\\User\\source\\repos\\sozo\\Core\\Core.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\User\\source\\repos\\Seminarios IECB\\Core\\Core.csproj",
+        "projectUniqueName": "C:\\Users\\User\\source\\repos\\sozo\\Core\\Core.csproj",
         "projectName": "Core",
-        "projectPath": "C:\\Users\\User\\source\\repos\\Seminarios IECB\\Core\\Core.csproj",
+        "projectPath": "C:\\Users\\User\\source\\repos\\sozo\\Core\\Core.csproj",
         "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\User\\source\\repos\\Seminarios IECB\\Core\\obj\\",
+        "outputPath": "C:\\Users\\User\\source\\repos\\sozo\\Core\\obj\\",
         "projectStyle": "PackageReference",
         "skipContentFileWrite": true,
         "configFilePaths": [
@@ -95,11 +95,11 @@
         "frameworks": {
           "net472": {
             "projectReferences": {
-              "C:\\Users\\User\\source\\repos\\Seminarios IECB\\Data\\Data.csproj": {
-                "projectPath": "C:\\Users\\User\\source\\repos\\Seminarios IECB\\Data\\Data.csproj"
+              "C:\\Users\\User\\source\\repos\\sozo\\Data\\Data.csproj": {
+                "projectPath": "C:\\Users\\User\\source\\repos\\sozo\\Data\\Data.csproj"
               },
-              "C:\\Users\\User\\source\\repos\\Seminarios IECB\\Utils\\Utils.csproj": {
-                "projectPath": "C:\\Users\\User\\source\\repos\\Seminarios IECB\\Utils\\Utils.csproj"
+              "C:\\Users\\User\\source\\repos\\sozo\\Utils\\Utils.csproj": {
+                "projectPath": "C:\\Users\\User\\source\\repos\\sozo\\Utils\\Utils.csproj"
               }
             }
           }
@@ -143,14 +143,14 @@
         }
       }
     },
-    "C:\\Users\\User\\source\\repos\\Seminarios IECB\\Data\\Data.csproj": {
+    "C:\\Users\\User\\source\\repos\\sozo\\Data\\Data.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\User\\source\\repos\\Seminarios IECB\\Data\\Data.csproj",
+        "projectUniqueName": "C:\\Users\\User\\source\\repos\\sozo\\Data\\Data.csproj",
         "projectName": "Data",
-        "projectPath": "C:\\Users\\User\\source\\repos\\Seminarios IECB\\Data\\Data.csproj",
+        "projectPath": "C:\\Users\\User\\source\\repos\\sozo\\Data\\Data.csproj",
         "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\User\\source\\repos\\Seminarios IECB\\Data\\obj\\",
+        "outputPath": "C:\\Users\\User\\source\\repos\\sozo\\Data\\obj\\",
         "projectStyle": "PackageReference",
         "skipContentFileWrite": true,
         "configFilePaths": [
@@ -167,8 +167,8 @@
         "frameworks": {
           "net472": {
             "projectReferences": {
-              "C:\\Users\\User\\source\\repos\\Seminarios IECB\\Utils\\Utils.csproj": {
-                "projectPath": "C:\\Users\\User\\source\\repos\\Seminarios IECB\\Utils\\Utils.csproj"
+              "C:\\Users\\User\\source\\repos\\sozo\\Utils\\Utils.csproj": {
+                "projectPath": "C:\\Users\\User\\source\\repos\\sozo\\Utils\\Utils.csproj"
               }
             }
           }
@@ -212,14 +212,14 @@
         }
       }
     },
-    "C:\\Users\\User\\source\\repos\\Seminarios IECB\\Utils\\Utils.csproj": {
+    "C:\\Users\\User\\source\\repos\\sozo\\Utils\\Utils.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\User\\source\\repos\\Seminarios IECB\\Utils\\Utils.csproj",
+        "projectUniqueName": "C:\\Users\\User\\source\\repos\\sozo\\Utils\\Utils.csproj",
         "projectName": "Utils",
-        "projectPath": "C:\\Users\\User\\source\\repos\\Seminarios IECB\\Utils\\Utils.csproj",
+        "projectPath": "C:\\Users\\User\\source\\repos\\sozo\\Utils\\Utils.csproj",
         "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\User\\source\\repos\\Seminarios IECB\\Utils\\obj\\",
+        "outputPath": "C:\\Users\\User\\source\\repos\\sozo\\Utils\\obj\\",
         "projectStyle": "PackageReference",
         "skipContentFileWrite": true,
         "configFilePaths": [

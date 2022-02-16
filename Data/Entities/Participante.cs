@@ -12,6 +12,8 @@ namespace Data.Entities
     {      
         public int EventoId { get; set; }
         public Evento  Evento { get; set; }
+        public int? PadrinhoId { get; set; }
+        public virtual Equipante Padrinho { get; set; }
 
         public string NomePai { get; set; }
         public string FonePai { get; set; }
@@ -22,8 +24,7 @@ namespace Data.Entities
         public virtual ICollection<Arquivo> Arquivos { get; set; }
         public virtual ICollection<CirculoParticipante> Circulos { get; set; }
         public string NomeConvite { get; set; }
-        public string FoneConvite { get; set; }
-        public string Congregacao { get; set; }
+        public string FoneConvite { get; set; }        
         public bool HasParente { get; set; }
         public string Parente { get; set; }
         public bool PendenciaContato { get; set; }

@@ -950,11 +950,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\User\\source\\repos\\Seminarios IECB\\Data\\Data.csproj",
+      "projectUniqueName": "C:\\Users\\User\\source\\repos\\sozo\\Data\\Data.csproj",
       "projectName": "Data",
-      "projectPath": "C:\\Users\\User\\source\\repos\\Seminarios IECB\\Data\\Data.csproj",
+      "projectPath": "C:\\Users\\User\\source\\repos\\sozo\\Data\\Data.csproj",
       "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\User\\source\\repos\\Seminarios IECB\\Data\\obj\\",
+      "outputPath": "C:\\Users\\User\\source\\repos\\sozo\\Data\\obj\\",
       "projectStyle": "PackageReference",
       "skipContentFileWrite": true,
       "configFilePaths": [
@@ -971,8 +971,8 @@
       "frameworks": {
         "net472": {
           "projectReferences": {
-            "C:\\Users\\User\\source\\repos\\Seminarios IECB\\Utils\\Utils.csproj": {
-              "projectPath": "C:\\Users\\User\\source\\repos\\Seminarios IECB\\Utils\\Utils.csproj"
+            "C:\\Users\\User\\source\\repos\\sozo\\Utils\\Utils.csproj": {
+              "projectPath": "C:\\Users\\User\\source\\repos\\sozo\\Utils\\Utils.csproj"
             }
           }
         }

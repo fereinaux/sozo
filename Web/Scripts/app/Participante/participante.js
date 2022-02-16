@@ -1,9 +1,30 @@
-﻿function CarregarTabelaParticipante() {
+﻿var realista = {}
+eventoId = 0
+function CarregarTabelaParticipante() {
+    if ($("#participante-eventoid").val() != eventoId) {
+        $.ajax({
+            url: '/Participante/GetPadrinhos',
+            data: { eventoId: $("#participante-eventoid").val() },
+            datatype: "json",
+            type: "GET",
+            success: (result) => {
+                eventoId = $("#participante-eventoid").val()
+                $("#participante-padrinhoid").html(`
+<option value=0>Selecione</option>
+${result.Padrinhos.map(p => `<option value=${p.Id}>${p.Nome}</option>`)}
+`)
+            }
+        });
+    }
+
     const tableParticipanteConfig = {
         language: languageConfig,
-        lengthMenu: [200, 500, 1000],
+
+        lengthMenu: [10, 30, 50, 100, 200],
         colReorder: false,
-        serverSide: false,
+        serverSide: true,
+        scrollX: true,
+        scrollXollapse: true,
         deferloading: 0,
         orderCellsTop: true,
         fixedHeader: true,
@@ -26,13 +47,14 @@
                         icon = "fa-female";
                         cor = "#ff00d4";
                     }
-                    return `<span onclick="ToggleSexo(${row.Id})" style = "font-size:18px;color:${cor};" class="p-l-xs pointer"> <i class="fa ${icon}" aria-hidden="true" title="${data}"></i></span >`;
+                    return `<span style = "font-size:18px;color:${cor};" class="p-l-xs pointer"> <i class="fa ${icon}" aria-hidden="true" title="${data}"></i></span >`;
                 }
             },
-            { data: "Nome", name: "Nome", autoWidth: true },
-            { data: "Idade", name: "Idade", autoWidth: true },
+            { data: "Nome", name: "Nome", width: "25%" },
+            { data: "Idade", name: "Idade", width: "5%", },
+            { data: "Padrinho", orderable: false, name: "Padrinho", width: "25%" },
             {
-                data: "Status", name: "Status", autoWidth: true, width: "10%", render: function (data, type, row) {
+                data: "Status", name: "Status", width: "5%", render: function (data, type, row) {
                     if (row.Checkin) {
                         data = "Presente";
                         cor = "warning";
@@ -43,18 +65,21 @@
                         cor = "danger";
                     else if (data === Inscrito)
                         cor = "info";
+                    else if (data === Espera)
+                        cor = "default";
                     return `<span style="font-size:13px" class="text-center label label-${cor}">${data}</span>`;
                 }
             },
 
             {
-                data: "Id", name: "Id", className: "text-center", orderable: false, width: "20%",
+                data: "Id", name: "Id", orderable: false, width: "25%",
                 "render": function (data, type, row) {
-                   return `<form enctype="multipart/form-data" id="frm-vacina${data}" method="post" novalidate="novalidate">
+                    return row.Status != Cancelado && row.Status != Espera ?
+                        `<form enctype="multipart/form-data" id="frm-vacina${data}" method="post" novalidate="novalidate">
                         ${!row.HasVacina ? ` <label for="arquivo${data}" class="inputFile">
                                 <span style="font-size:18px" class="text-mutted pointer p-l-xs"><i class="fa fa-syringe" aria-hidden="true" title="Vacina"></i></span>
-                                <input onchange="PostVacina(${data})" style="display: none;" class="custom-file-input inputFile" id="arquivo${data}" name="arquivo${data}" type="file" value="">
-                            </label>`: `<span style="font-size:18px" class="text-success p-l-xs pointer" onclick="toggleVacina(${data})"><i class="fa fa-syringe" aria-hidden="true" title="Vacina"></i></span>`}                                             
+                                <input onchange='PostVacina(${data},${JSON.stringify(row)})' style="display: none;" class="custom-file-input inputFile" id="arquivo${data}" name="arquivo${data}" type="file" value="">
+                            </label>`: `<span style="font-size:18px" class="text-success p-l-xs pointer" onclick="toggleVacina(${data})"><i class="fa fa-syringe" aria-hidden="true" title="Vacina"></i></span>`}                                           
                             ${GetAnexosButton('Anexos', data, row.QtdAnexos)}
                             ${GetIconWhatsApp(row.Fone)}
                             ${GetIconTel(row.Fone)}
@@ -63,7 +88,8 @@
                             ${GetButton('Opcoes', JSON.stringify(row), row.HasContact ? 'blue' : 'cinza', 'fas fa-info-circle', 'Opções')}
                             
                             ${GetButton('CancelarInscricao', JSON.stringify(row), 'red', 'fa-times', 'Cancelar Inscrição')}
-                    </form>`                    
+                    </form>`
+                        : ''
                 }
             }
         ],
@@ -71,8 +97,8 @@
             [2, "asc"]
         ],
         ajax: {
-            url: '/Participante/GetParticipantes',
-            data: { EventoId: $("#participante-eventoid").val() },
+            url: '/Participante/GetParticipantesDatatable',
+            data: { EventoId: $("#participante-eventoid").val(), PadrinhoId: $("#participante-padrinhoid").val() },
             datatype: "json",
             type: "POST"
         }
@@ -94,6 +120,7 @@
 
     $("#table-participante").DataTable(tableParticipanteConfig);
 }
+
 
 function Opcoes(row) {
     realista = row;
@@ -159,71 +186,63 @@ function enviar() {
         case 'covid':
             text = `Olá, *${getNome(destinatarioGlobal)}*!
 
-Estou vendo aqui que sua inscrição para o Seminário de Vida no Espírito Santo já foi paga e sua vaga está garantida, sendo assim, tenho uns avisos:
+Estamos chegando perto do Sozo e alguns cuidados serão necessários devido ao tempo de pandemia:
 
 - O uso de máscara durante o evento é obrigatório;
 
-- Será obrigatório a comprovação da vacinação com duas doses (ou uma dose, para dose única) tomadas até 15 dias antes do evento.
+- Caso você esteja com algum sintoma gripal, você *NÃO* poderá comparecer a este evento, tendo seu valor reembolsado.
 
-- Para quem não tomou as duas doses/dose única, será *OBRIGATÓRIO* a realização do *RT-PCR até 72h antes* do dia do evento (a partir do dia 16/11). Já o *Teste Rápido* deverá ser realizado em *até 24h antes* do dia do evento (a partir do dia 18/11).
+- Você dividirá o quarto/dormitório com outras pessoas, tudo com o devido espaçamento.
 
-- O resultado deve ser NEGATIVO e apresentado no dia do evento ou enviado previamente.
+- Será obrigatório a comprovação do esquema de vacinação *COMPLETO* tomadas até 15 dias antes do evento. (Para pessoas com mais de 55 anos, a dose de *REFORÇO* deverá ser apresentada)
 
-- Caso o seu resultado dê *POSITIVO*, o valor do evento será reembolsado.
+- O envio do comprovante de vacinação deverá acontecer até o dia 11/02.
 
-${RodapeEvento($("#participante-eventoid option:selected").text())}`
+*Equipe Dirigente e Secretaria do 6º Sozo*`
             break;
         case 'pagamento':
-            text = `Olá, *${getNome(destinatarioGlobal)}*!
+            text = `
+Olá, *${getNome(destinatarioGlobal)}*!
 
-Estamos com a sua inscrição para o *Seminario de Vida no Espírito*. Porém, para confirmá-la é preciso efetuar o pagamento.
 
-Como ainda estamos em pandemia, precisamos tomar um cuidado extra e por isso teremos *apenas 100 vagas*;
+Estamos com a sua inscrição para o *SOZO*. Porém, para confirmá-la é preciso efetuar o pagamento em até 48h. Como ainda estamos em pandemia, precisamos tomar um cuidado extra e por isso teremos *apenas 70 vagas*; O investimento está custando *R$ 350,00*, e deve ser feito através do PIX: chalesdealdeia@iecbrasil.com.br
 
-O investimento está custando *R$ 300,00*, e poderá ser feito através do PIX: sves.trindade@gmail.com, cartão ou dinheiro. Procurar Barbie na Cantina da Igreja de terça à sexta feira das 17h às 20h e no domingo das 9h às 18h.
+Após realizado, envie o comprovante de pagamento para mim para que possamos confirmar sua vaga!
 
-No caso do PIX, lembra de enviar o comprovante de pagamento para mim! Fone: (81)9.8811-5271.
-
-*Corre para garantir tua vaga!*  🥳
+*Corre para garantir tua vaga!*  
 
 ${RodapeEvento($("#participante-eventoid option:selected").text())}`
             break;
         case 'info':
             text = `Olá, *${getNome(destinatarioGlobal)}*!
-Estamos felizes com sua participação no Seminário de Vida no Espírito Santo do dia 19 à 21 de novembro de 2021.
-Temos certeza que serão dias muito especiais em sua vida, por isso, aproveite cada minuto desse Seminário!!
 
-Segue alguns avisos:
+Estamos felizes com sua participação no Sozo do dia 18 à 20 de fevereiro de 2022.
 
-1. Dia 19 - Às 18h30 - O Check-in e às  20h será servido o Jantar.
-   Dia 21 - Encerramento às 12h
-2. A localização do evento será no Colonial Aldeia, Km 11,5
-*R. Sete de Setembro, s\\n - Aldeia dos Camarás, Araça - PE, 54789-525*
+Temos certeza que serão dias muito especiais em sua vida, por isso, aproveite cada minuto desse evento!!
+
+Seguem alguns avisos:
+
+1. *Dia 18*: O Check-in se inicia às 18:30 e às 20h será servido o Jantar.
+
+2. *Dia 20*: O Encerramento acontecerá às 12h
+
+3. A localização do evento será no Colonial Aldeia, Km 11,5
+*R. Sete de Setembro, s\n - Aldeia dos Camarás, Araça - PE, 54789-525*
 https://goo.gl/maps/ZYcmct2f4jrMa1bw9
 
-3. O *uso da máscara* durante todo o evento será obrigatório, dessa forma, deverá ser providenciado uma quantidade para a troca da máscara durante o dia. 😷
-4. Serão fornecidos itens de cama e banho (travesseiro, lençol, cobertor e toalha de banho). Caso queiram levar os de uso pessoal, fique à vontade.
-5. Levar remédios de uso continuo e eventual, como também, dietas restritivas.
-6. Nosso plenário é frio então é bom levar um casaco.
-7. Atentar para o uso de roupas que estejam condizentes com o ambiente.
-${RodapeEvento($("#participante-eventoid option:selected").text())}`
-            break;
-        case 'carta':
-            text = `Ficamos felizes por você ter participado de um dos nossos Cursilhos e temos um convite a lhe fazer!
+4. O *uso da máscara* durante todo o evento será obrigatório, dessa forma, deverá ser providenciado uma quantidade para a troca da máscara durante o dia. 😷
 
-Temos um momento no Realidade que se parece muito com a *Manhãnita*, é a nossa *Noitita* que acontece no sábado à noite, a partir das 17h. 
+5. Serão fornecidos itens de cama e banho (travesseiro, lençol, cobertor e toalha de banho). Caso queiram levar os de uso pessoal, fique à vontade.
 
-Então você e outras pessoas próximas do/da realista que *já participaram de algum Cursilho/Realidade* são muito bem-vindos. É um momento muito especial onde demonstramos a importância de ser parte do corpo de Cristo para eles!
+6. Levar remédios de uso continuo e eventual, como também, dietas restritivas.
 
-Para participar da nossa *Noitita*, pedimos que siga algumas orientações: 
-- Esteja vacinado com pelo menos a primeira dose.
-- Use máscara  durante todo o momento e respeite o distanciamento orientado pela nossa equipe.
-- Caso você esteja com sintomas de gripe, pedimos que não compareça, para sua segurança e a nossa - temos quase 200 adolescente na bolha do Realidade.
+7. Nosso plenário é frio, então leve um casaco.
 
-Pode ficar tranquilo  que seu realista vai receber todo o amor e cuidado que o momento sugere.
+8. Atentar para o uso de roupas que estejam condizentes com o ambiente.
 
-Te esperamos lá! 🥰
-*Equipe da Secretaria | ${$("#participante-eventoid option:selected").text()}*`
+9. Teremos uma cantina/livraria funcionando durante todo o evento (a inscrição não contempla os itens vendidos aqui).
+
+*Equipe Dirigente e Secretaria do 6º Sozo*`
             break;
         case 'foto':
             text = `Oi, *${getNome('realista')}*! Como estão as expectativas para o Realidade? Espero que boas! 🥳
@@ -318,7 +337,7 @@ function GetAnexos(id) {
         fixedHeader: true,
         filter: true,
         orderMulti: false,
-        
+
         destroy: true,
         dom: domConfigNoButtons,
         columns: [
@@ -392,7 +411,7 @@ function CarregarTabelaPagamentos(id) {
             {
                 data: "Id", name: "Id", className: "text-center", orderable: false, width: "15%",
                 "render": function (data, type, row) {
-                    return `${GetIconWhatsApp($("#pagamentos-whatsapp").val(), RebciboPagamento(row.Valor, row.FormaPagamento))}
+                    return `${GetAnexosButton('AnexosLancamento', JSON.stringify(row), row.QtdAnexos)}
                             ${GetButton('DeletePagamento', data, 'red', 'fa-trash', 'Excluir')}`;
                 }
             }
@@ -415,9 +434,51 @@ $(document).ready(function () {
 });
 
 
+
+function GetAnexosLancamento(id) {
+    const tableArquivoConfig = {
+        language: languageConfig,
+        lengthMenu: [200, 500, 1000],
+        colReorder: false,
+        serverSide: false,
+        deferloading: 0,
+        orderCellsTop: true,
+        fixedHeader: true,
+        filter: true,
+        orderMulti: false,
+        responsive: true, stateSave: true,
+        destroy: true,
+        dom: domConfigNoButtons,
+        columns: [
+            { data: "Nome", name: "Nome", autoWidth: true },
+            { data: "Extensao", name: "Extensao", autoWidth: true },
+            {
+                data: "Id", name: "Id", orderable: false, width: "15%",
+                "render": function (data, type, row) {
+                    return `${GetButton('GetArquivo', data, 'blue', 'fa-download', 'Download')}
+                            ${GetButton('DeleteArquivo', data, 'red', 'fa-trash', 'Excluir')}`;
+                }
+            }
+        ],
+        order: [
+            [0, "asc"]
+        ],
+        ajax: {
+            url: '/Arquivo/GetArquivosLancamento',
+            data: { id: id ? id : $("#LancamentoIdModal").val() },
+            datatype: "json",
+            type: "POST"
+        }
+    };
+
+    $("#table-anexos").DataTable(tableArquivoConfig);
+}
+
+
 function Pagamentos(row) {
+    realista = row;
     $("#pagamentos-whatsapp").val(row.Fone);
-    $("#pagamentos-valor").val($("#pagamentos-valor").data("valor"));
+    $("#pagamentos-valor").val(350);
     $("#pagamentos-participanteid").val(row.Id);
     $("#pagamentos-meiopagamento").val($("#pagamentos-meiopagamento option:first").val());
     CarregarTabelaPagamentos(row.Id);
@@ -425,7 +486,9 @@ function Pagamentos(row) {
 }
 
 $("#modal-pagamentos").on('hidden.bs.modal', function () {
-    CarregarTabelaParticipante();
+    if (!$('#LancamentoIdModal').val()) {
+        CarregarTabelaParticipante();
+    }
 })
 
 function CarregarValorTaxa() {
@@ -523,12 +586,7 @@ function PostPagamento() {
                 }),
             success: function () {
                 CarregarTabelaPagamentos($("#pagamentos-participanteid").val());
-                ConfirmMessage("Deseja enviar um recibo para o Participante via Whatsapp?").then((result) => {
-                    if (result) {
-                        window.open(`${GetLinkWhatsApp($("#pagamentos-whatsapp").val(), RebciboPagamento($("#pagamentos-valor").val(), $('.contabancaria').hasClass('d-none') ? $("#pagamentos-meiopagamento option:selected").text() : (($("#pagamentos-meiopagamento option:selected").text() == Transferencia ? "Transferência/" : "Boleto/") + $("#pagamentos-contabancaria option:selected").text())))}`);
-                    }
-                    SuccessMesageOperation();
-                });
+                SuccessMesageOperation();
             }
         });
     }
@@ -746,10 +804,20 @@ function toggleVacina(id) {
         });
 }
 
+function AnexosLancamento(row) {
+    $("#LancamentoIdModal").val(row.Id);
+    $("#ParticipanteIdModal").val(row.ParticipanteId);
+    GetAnexosLancamento(row.Id)
+    $("#modal-pagamentos").modal('hide');
+    $("#modal-anexos").modal();
+}
+
 function PostArquivo() {
 
     var dataToPost = new FormData($('#frm-upload-arquivo-modal')[0]);
-    dataToPost.set('arquivo', dataToPost.get('arquivo-modal'))
+    var filename = dataToPost.get('arquivo-modal').name
+    var arquivo = new File([dataToPost.get('arquivo-modal')], 'Pagamento ' + realista.Nome + filename.substr(filename.indexOf('.')));
+    dataToPost.set('Arquivo', arquivo)
     dataToPost.set('ParticipanteId', dataToPost.get('ParticipanteIdModal'))
     dataToPost.set('LancamentoId', dataToPost.get('LancamentoIdModal'))
     $.ajax(

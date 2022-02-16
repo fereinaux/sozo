@@ -23,6 +23,7 @@ namespace Core.Models.Equipantes
         public string Nome { get; set; }
         public string Apelido { get; set; }
         public string Equipe { get; set; }
+        public string Status { get; set; }
         public int Idade { get; set; }
         public int Faltas { get; set; }
         public int QtdAnexos { get; set; }
@@ -30,6 +31,7 @@ namespace Core.Models.Equipantes
         public string Fone { get; set; }
         public bool HasVacina { get; set; }
         public bool HasFoto { get; set; }
+        public bool HasOferta { get; set; }
         public string DataNascimento { get; set; }
         public string Email { get; set; }
         public string Alergia { get; set; }
@@ -42,12 +44,15 @@ namespace Core.Models.Equipantes
         public string Sexo { get; set; }
         public string Nome { get; set; }
         public string Apelido { get; set; }
+        public string Status { get; set; }
         [DisplayName("Data de Nascimento")]
         public string DataNascimento { get; set; }
         public int Idade { get; set; }
         public string Fone { get; set; }
         public string Email { get; set; }
         public string Equipe { get; set; }
+        [DisplayName("Oferta de Amor")]
+        public string HasOferta { get; set; }
         [DisplayName("Comprovante da Vacina")]
         public string HasVacina { get; set; }
         public string Alergia { get; set; }

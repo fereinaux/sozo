@@ -110,6 +110,9 @@ function GetResultadosAdmin() {
             $("#equipe-female").text(result.EquipeMeninas);
             $("#boletos").text(result.Boletos);
             $("#contatos").text(result.Contatos);
+            $("#saldo").text(result.SaldoGeral);
+            $("#saldodinheiro").text(result.SaldoDinheir);
+            $("#saldopix").text(result.SaldoPix);
             $("#receita").text(result.TotalReceber);
             $("#despesa").text(result.TotalPagar);
 

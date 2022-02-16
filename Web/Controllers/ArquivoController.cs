@@ -45,6 +45,14 @@ namespace SysIgreja.Controllers
         }
 
         [HttpPost]
+        public ActionResult GetArquivosEquipante(int equipanteid)
+        {
+            var query = arquivosBusiness.GetArquivosByEquipante(equipanteid);
+
+            return MapAqruivos(query);
+        }
+
+        [HttpPost]
         public ActionResult GetArquivosEquipanteEvento(int eventoid, int equipanteid)
         {
             var query = arquivosBusiness.GetArquivosByEquipanteEvento(equipanteid, eventoid);

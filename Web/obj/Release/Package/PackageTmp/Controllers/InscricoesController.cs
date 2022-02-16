@@ -57,6 +57,16 @@ namespace SysIgreja.Controllers
             return View();
         }
 
+        public ActionResult Equipe()
+        {
+            ViewBag.Title = "Inscrições";
+            var evento = eventosBusiness.GetEventoAtivo();
+            if (evento == null)
+                return RedirectToAction("InscricoesEncerradas");
+            ViewBag.Logo = evento.TipoEvento.GetNickname() + ".png";
+            return View();
+        }
+
         private bool CapacidadeUltrapassada(Evento evento, StatusEnum[] arrStatus)
         {
             return participantesBusiness
@@ -89,16 +99,31 @@ namespace SysIgreja.Controllers
             ViewBag.Participante = new InscricaoConcluidaViewModel
             {
                 Id = participante.Id,
-                Apelido = participante.Apelido,
+                Apelido = participante.Nome,
                 Logo = participante.Evento.TipoEvento.GetNickname() + ".png",
-                Evento = $"{participante.Evento.Numeracao.ToString()}º {participante.Evento.TipoEvento.GetDescription()}",
+                Evento = $"{participante.Evento.TipoEvento.GetDescription()}",
                 Valor = participante.Evento.Valor.ToString("C", CultureInfo.CreateSpecificCulture("pt-BR")),
-                DataEvento = participante.Evento.DataEvento.ToString("dd/MM/yyyy")
+                DataEvento = participante.Evento.DataEvento.ToString("dd/MM/yyyy"),
+
+                PadrinhoFone = participante.Padrinho.Fone,
+                PadrinhoNome = participante.Padrinho.Nome
             };
+
+            ViewBag.ContasBancarias = contaBancariaBusiness.GetContasBancarias().ToList()
+               .Select(x => new ContaBancariaViewModel
+               {
+                   Id = x.Id,
+                   Banco = x.Banco.GetDescription(),
+                   Agencia = x.Agencia,
+                   CPF = x.CPF,
+                   Conta = x.Conta,
+                   Nome = x.Nome,
+                   Operacao = x.Operacao
+               });
+
+
             if (participante.Status == StatusEnum.Inscrito)
             {
-                if (CapacidadeUltrapassada(participante.Evento, new StatusEnum[] { StatusEnum.Confirmado }))
-                    return View("InscricoesEncerradas");
 
                 return View("InscricaoConcluida");
             }

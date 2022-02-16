@@ -2,6 +2,7 @@
 using Core.Models.Eventos;
 using Data.Entities;
 using Data.Repository;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
@@ -130,12 +131,12 @@ namespace Core.Business.Circulos
         public List<Participante> GetParticipantesSemCirculo(int eventoId)
         {
             var listParticipantesId = circuloParticipanteRepository
-                           .GetAll(x => x.Circulo.EventoId == eventoId && x.Participante.Status != StatusEnum.Cancelado)
+                           .GetAll(x => x.Circulo.EventoId == eventoId && x.Participante.Status == StatusEnum.Confirmado)
                            .Select(x => x.ParticipanteId)
                            .ToList();
 
             var listParticipantes = participanteRepository
-                 .GetAll(x => x.EventoId == eventoId && !listParticipantesId.Contains(x.Id) && x.Status != StatusEnum.Cancelado)
+                 .GetAll(x => x.EventoId == eventoId && !listParticipantesId.Contains(x.Id) && x.Status == StatusEnum.Confirmado)
                  .OrderBy(x => x.DataCadastro)
                  .ToList();
 
