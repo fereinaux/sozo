@@ -158,7 +158,7 @@ function PrintSozo() {
             doc.text(85, 43, "10:00");
             doc.text(125, 43, "12:00");
             doc.text(165, 43, "16:00");
-            doc.text(205, 43, "17:00");
+            doc.text(205, 43, "18:00");
             doc.text(245, 43, "Domingo");
             doc.line(10, 45, 290, 45);
             doc.setFontType("normal");

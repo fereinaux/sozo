@@ -23,11 +23,13 @@ namespace SysIgreja.Controllers
     {
         private readonly IEquipesBusiness equipesBusiness;
         private readonly IReunioesBusiness reunioesBusiness;
+        private readonly IEventosBusiness eventosBusiness;
 
         public EquipeController(IEquipesBusiness equipesBusiness, IEventosBusiness eventosBusiness, IAccountBusiness accountBusiness, IReunioesBusiness reunioesBusiness) : base(eventosBusiness, accountBusiness)
         {
             this.equipesBusiness = equipesBusiness;
             this.reunioesBusiness = reunioesBusiness;
+            this.eventosBusiness = eventosBusiness;
         }
 
         public ActionResult Index()
@@ -87,13 +89,14 @@ namespace SysIgreja.Controllers
         }
 
         [HttpPost]
-        public ActionResult GetEquipes(int EventoId)
+        public ActionResult GetEquipes(int? EventoId)
         {
+            EventoId = EventoId ?? eventosBusiness.GetEventoAtivo().Id;
             var result = equipesBusiness.GetEquipes(EventoId).Select(x => new ListaEquipesViewModel
             {
                 Id = x.Id,
                 Equipe = x.Description,
-                QuantidadeMembros = equipesBusiness.GetMembrosEquipe(EventoId, (EquipesEnum)x.Id).Count()
+                QuantidadeMembros = equipesBusiness.GetMembrosEquipe(EventoId.Value, (EquipesEnum)x.Id).Count()
             });
 
             return Json(new { data = result }, JsonRequestBehavior.AllowGet);

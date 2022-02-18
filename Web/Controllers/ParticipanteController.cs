@@ -166,17 +166,17 @@ namespace SysIgreja.Controllers
             result.Nome = UtilServices.CapitalizarNome(result.Nome);
             result.Apelido = UtilServices.CapitalizarNome(result.Apelido);
 
-            var quartoAtual = quartosBusiness.GetNextQuarto(result.EventoId, result.Sexo);
+            var quartoAtual = quartosBusiness.GetNextQuarto(result.EventoId, result.Sexo,TipoPessoaEnum.Participante);
 
             var dadosAdicionais = new
             {
                 Circulo = circulosBusiness.GetCirculosComParticipantes(result.EventoId).Where(x => x.ParticipanteId == Id)?.FirstOrDefault()?.Circulo?.Cor.GetDescription() ?? "",
                 Status = result.Status.GetDescription(),
-                Quarto = quartosBusiness.GetQuartosComParticipantes(result.EventoId).Where(x => x.ParticipanteId == Id).FirstOrDefault()?.Quarto?.Titulo ?? "",
+                Quarto = quartosBusiness.GetQuartosComParticipantes(result.EventoId, TipoPessoaEnum.Participante).Where(x => x.ParticipanteId == Id).FirstOrDefault()?.Quarto?.Titulo ?? "",
                 QuartoAtual = new
                 {
                     Quarto = mapper.Map<PostQuartoModel>(quartoAtual),
-                    Participantes = quartoAtual != null ? quartosBusiness.GetParticipantesByQuartos(quartoAtual.Id).Count() : 0
+                    Participantes = quartoAtual != null ? quartosBusiness.GetParticipantesByQuartos(quartoAtual.Id,TipoPessoaEnum.Participante).Count() : 0
                 }
             };
 
@@ -202,7 +202,7 @@ namespace SysIgreja.Controllers
         [HttpGet]
         public ActionResult GetParticipantesByQuarto(int QuartoId)
         {
-            var result = quartosBusiness.GetParticipantesByQuartos(QuartoId).ToList().Select(x => new
+            var result = quartosBusiness.GetParticipantesByQuartos(QuartoId,TipoPessoaEnum.Participante).ToList().Select(x => new
             {
                 Nome = UtilServices.CapitalizarNome(x.Participante.Nome),
                 Medicacao = (x.Participante.Medicacao ?? "-") + "/" + (x.Participante.Alergia ?? "-")

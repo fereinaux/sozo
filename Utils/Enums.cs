@@ -191,6 +191,15 @@ namespace Utils.Enums
         TaxaEquipante = 120
     }
 
+    public enum TipoPessoaEnum
+    {
+        [Description("Equipante")]
+        Equipante,
+        [Description("Participante")]
+        Participante
+    }
+
+
     public enum MeioPagamentoPadraoEnum
     {
         [Description("Dinheiro")]

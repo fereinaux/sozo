@@ -33,7 +33,7 @@ namespace Core.Business.Participantes
             Participante participante = participanteRepository.GetById(id);
             participante.Status = StatusEnum.Cancelado;
             circulosBusiness.ChangeCirculo(id, null);
-            quartosBusiness.ChangeQuarto(id, null);
+            quartosBusiness.ChangeQuarto(id, null,null);
 
             var emEspera = participanteRepository.GetAll().Where(x => x.Status == StatusEnum.Espera).OrderBy(x => x.Id).FirstOrDefault();
 
@@ -95,7 +95,7 @@ namespace Core.Business.Participantes
                 if (cancelarCheckin)
                 {
                     circulosBusiness.ChangeCirculo(participante.Id, null);
-                    quartosBusiness.ChangeQuarto(participante.Id, null);
+                    quartosBusiness.ChangeQuarto(participante.Id, null,null);
                 }
             }
         }
@@ -103,13 +103,13 @@ namespace Core.Business.Participantes
         private void ManageQuarto(Participante participante)
         {
             if (!quartosBusiness
-                              .GetQuartosComParticipantes(participante.EventoId)
+                              .GetQuartosComParticipantes(participante.EventoId,TipoPessoaEnum.Participante)
                               .Where(x => x.ParticipanteId == participante.Id)
                               .Any())
             {
-                var quarto = quartosBusiness.GetNextQuarto(participante.EventoId, participante.Sexo);
+                var quarto = quartosBusiness.GetNextQuarto(participante.EventoId, participante.Sexo, TipoPessoaEnum.Participante);
                 if (quarto != null)
-                    quartosBusiness.ChangeQuarto(participante.Id, quarto.Id);
+                    quartosBusiness.ChangeQuarto(participante.Id, quarto.Id,null);
             }
         }
 

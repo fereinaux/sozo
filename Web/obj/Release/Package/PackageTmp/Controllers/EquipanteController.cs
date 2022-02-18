@@ -7,6 +7,7 @@ using Core.Business.Equipes;
 using Core.Business.Eventos;
 using Core.Business.Lancamento;
 using Core.Business.MeioPagamento;
+using Core.Business.Quartos;
 using Core.Business.Reunioes;
 using Core.Models.Equipantes;
 using Core.Models.Lancamento;
@@ -29,6 +30,7 @@ namespace SysIgreja.Controllers
     public class EquipanteController : Controller
     {
         private readonly IEquipantesBusiness equipantesBusiness;
+        private readonly IQuartosBusiness quartosBusiness;
         private readonly IArquivosBusiness arquivoBusiness;
         private readonly IEventosBusiness eventosBusiness;
         private readonly IEquipesBusiness equipesBusiness;
@@ -41,9 +43,10 @@ namespace SysIgreja.Controllers
         private readonly int qtdReunioes;
 
 
-        public EquipanteController(IEquipantesBusiness equipantesBusiness, IDatatableService datatableService, IEventosBusiness eventosBusiness, IEquipesBusiness equipesBusiness, ILancamentoBusiness lancamentoBusiness, IReunioesBusiness reunioesBusiness, IMeioPagamentoBusiness meioPagamentoBusiness, IContaBancariaBusiness contaBancariaBusiness, IArquivosBusiness arquivoBusiness)
+        public EquipanteController(IEquipantesBusiness equipantesBusiness, IQuartosBusiness quartosBusiness, IDatatableService datatableService, IEventosBusiness eventosBusiness, IEquipesBusiness equipesBusiness, ILancamentoBusiness lancamentoBusiness, IReunioesBusiness reunioesBusiness, IMeioPagamentoBusiness meioPagamentoBusiness, IContaBancariaBusiness contaBancariaBusiness, IArquivosBusiness arquivoBusiness)
         {
             this.equipantesBusiness = equipantesBusiness;
+            this.quartosBusiness = quartosBusiness;
             this.eventosBusiness = eventosBusiness;
             this.equipesBusiness = equipesBusiness;
             this.arquivoBusiness = arquivoBusiness;
@@ -114,6 +117,11 @@ namespace SysIgreja.Controllers
 
                 var totalResultsCount = result.Count();
                 var filteredResultsCount = totalResultsCount;
+
+                if (model.Equipe != null)
+                {
+                    result = result.Where(x => x.Equipes.Any() && x.Equipes.OrderByDescending(z => z.EventoId).FirstOrDefault().Equipe == model.Equipe);
+                }
 
                 if (model.search.value != null)
                 {
@@ -252,7 +260,13 @@ namespace SysIgreja.Controllers
 
             var equipante = mapper.Map<PostEquipanteModel>(result);
 
-            return Json(new { Equipante = equipante }, JsonRequestBehavior.AllowGet);
+            var dadosAdicionais = new
+            {
+                Status = result.Status.GetDescription(),
+                Quarto = quartosBusiness.GetQuartosComParticipantes(eventoId, TipoPessoaEnum.Equipante).Where(x => x.EquipanteId == Id).FirstOrDefault()?.Quarto?.Titulo ?? ""               
+            };
+
+            return Json(new { Equipante = equipante, DadosAdicionais = dadosAdicionais }, JsonRequestBehavior.AllowGet);
         }
 
         [AllowAnonymous]

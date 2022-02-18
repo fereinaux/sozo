@@ -312,9 +312,13 @@ function GetEquipante() {
                     </form>`)
 
                 $(".participante-info").removeClass('d-none');
-
-                $(".quarto-info").addClass('d-none');
-
+        
+                $('.quarto').text(data.DadosAdicionais.Quarto || "Sem Quarto");
+                if (!data.DadosAdicionais.Quarto) {
+                    $(".quarto-info").removeClass('d-none');
+                }
+                else
+                    $(".quarto-info").addClass('d-none');
 
                 if (data.Equipante.Checkin) {
                     $('.status').text("Presente");

@@ -27,7 +27,7 @@
             {
                 <li class="@Html.IsSelected(action: "Index", controller: "Participante")"><a href="@Url.Action("Index", "Participante")"><i class="fa fa-users"></i><span class="nav-label">Participantes</span></a></li>
             }
-      
+
 
             @if (User.IsInRole(Usuario.Admin) || User.IsInRole(Usuario.Master) || User.IsInRole(Usuario.Secretaria))
             {
@@ -37,6 +37,11 @@
             @if (User.IsInRole(Usuario.Admin) || User.IsInRole(Usuario.Master) || User.IsInRole(Usuario.Secretaria))
             {
                 <li class="@Html.IsSelected(action: "Index", controller: "Quarto")"><a href="@Url.Action("Index", "Quarto")"><i class="fa fa-home"></i><span class="nav-label">Quartos</span></a></li>
+            }
+
+            @if (User.IsInRole(Usuario.Admin) || User.IsInRole(Usuario.Master) || User.IsInRole(Usuario.Secretaria))
+            {
+                <li class="@Html.IsSelected(action: "QuartoEquipe", controller: "Quarto")"><a href="@Url.Action("QuartoEquipe", "Quarto")"><i class="fa fa-bed"></i><span class="nav-label">Quartos Equipe</span></a></li>
             }
 
             @if (User.IsInRole(Usuario.Admin) || User.IsInRole(Usuario.Master) || User.IsInRole(Usuario.Secretaria))

@@ -72,6 +72,7 @@ ${GetIconWhatsApp(row.Fone)}
         ],
         ajax: {
             url: '/Equipante/GetEquipantesDataTable',
+            data: { Equipe: $("#equipe-select").val() != 999 ? $("#equipe-select").val() : null },
             datatype: "json",
             type: "POST"
         }
@@ -80,6 +81,20 @@ ${GetIconWhatsApp(row.Fone)}
     $("#table-equipantes").DataTable(tableEquipanteConfig);
 }
 
+function getEquipes() {
+    $.ajax({
+        url: '/Equipe/GetEquipes',
+        datatype: "json",
+        type: "POST",
+        success: (result) => {
+            console.log(result);
+            $("#equipe-select").html(`
+<option value=999>Selecione</option>
+${result.data.map(p => `<option value=${p.Id}>${p.Equipe}</option>`)}
+`)
+        }
+    });
+}
 
 function Anexos(id) {
     $("#EquipanteIdModal").val(id);
@@ -678,6 +693,7 @@ function PostPagamento() {
 
 $(document).ready(function () {
     CarregarTabelaEquipante();
+    getEquipes()
 });
 
 

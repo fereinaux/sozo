@@ -16,6 +16,7 @@ namespace Data.Entities
         public Evento Evento { get; set; }
         public string Titulo { get; set; }
         public SexoEnum Sexo { get; set; }
+        public TipoPessoaEnum TipoPessoa { get; set; }
         public int Capacidade { get; set; }
     }
 }

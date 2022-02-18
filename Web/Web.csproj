@@ -1119,6 +1119,7 @@
     <Content Include="Views\Login\Index.cshtml" />
     <Content Include="Views\Inscricoes\Equipe.cshtml" />
     <Content Include="Views\Equipante\InscricaoConcluida.cshtml" />
+    <Content Include="Views\Quarto\QuartoEquipe.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
